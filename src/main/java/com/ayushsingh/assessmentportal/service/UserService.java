@@ -2,6 +2,7 @@ package com.ayushsingh.assessmentportal.service;
 
 
 import com.ayushsingh.assessmentportal.dto.UserDto;
+import com.ayushsingh.assessmentportal.model.User;
 
 public interface UserService  {
     
@@ -18,4 +19,9 @@ public interface UserService  {
 
     public UserDto updateUser(UserDto userDto,String id);
 
+    UserDto registerNewUser(UserDto userDto);
+
+    User getUserByUsername(String username);
+
+    UserDto registerAdminUser(UserDto userDto,String key);
 }

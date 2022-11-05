@@ -1,0 +1,81 @@
+package com.ayushsingh.assessmentportal.configs;
+
+import java.io.IOException;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.ayushsingh.assessmentportal.constants.AppConstants;
+import com.ayushsingh.assessmentportal.service.service_impl.UserDetailsServiceImpl;
+
+import io.jsonwebtoken.ExpiredJwtException;
+/*
+ * Class to authorize the token in the header
+ */
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    private final String CLASS_NAME = JwtAuthenticationFilter.class.getSimpleName();
+    @Autowired
+    private UserDetailsServiceImpl userDetailsServiceImpl;
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        // Get authorization header
+        final String requestTokenHeader = request.getHeader(AppConstants.AUTHORIZATION);
+        System.out.println(CLASS_NAME + " request header token: " + requestTokenHeader);
+        String username = null;
+        String jwtToken = null;
+        if (requestTokenHeader != null && requestTokenHeader.startsWith(AppConstants.BEARER)) {
+
+            try {
+                jwtToken = requestTokenHeader.substring(7);
+                username = this.jwtUtil.extractUsername(jwtToken);
+            } catch (ExpiredJwtException e) {
+                System.out.println(CLASS_NAME + " jwt token has expired");
+                // e.printStackTrace();
+                // throw new InvalidTokenInHeaderException(jwtToken, "ExpiredJwtToken exception: ");
+            }
+        } else {
+            System.out.println(CLASS_NAME + " jwt token is either empty or does not starts with Bearer");
+            // throw new InvalidTokenInHeaderException(requestTokenHeader,
+            //         "Either token is null or does not starts with Bearer");
+        }
+        // now validate the token
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            final UserDetails userDetails = this.userDetailsServiceImpl.loadUserByUsername(username);
+
+            if (this.jwtUtil.validateToken(jwtToken, userDetails)) {
+                // token is valid
+                // set authentication in security context holder
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                usernamePasswordAuthenticationToken
+                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            }
+            else{
+                System.out.println(CLASS_NAME+" jwt token validation returned false");
+                // throw new InvalidTokenInHeaderException(jwtToken, "token validation returned false");
+            }
+        }
+        else{
+            System.out.println(CLASS_NAME+" username is null username: "+username+" or context authentication is not null");
+            // throw new InvalidTokenInHeaderException(jwtToken, "either username is null or security context is not null (username: "+username+")");
+        }
+        filterChain.doFilter(request, response);
+    }
+}

@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +19,7 @@ import com.ayushsingh.assessmentportal.constants.AppConstants;
 import com.ayushsingh.assessmentportal.dto.UserDto;
 import com.ayushsingh.assessmentportal.exceptions.ApiResponse;
 import com.ayushsingh.assessmentportal.exceptions.SuccessResponse;
-
+import com.ayushsingh.assessmentportal.model.User;
 import com.ayushsingh.assessmentportal.service.UserService;
 
 @RestController
@@ -32,23 +31,31 @@ public class UserController {
 
 	
 
-    @PostMapping("/create")
-    public ResponseEntity<SuccessResponse<UserDto>> createUser(@Valid @RequestBody UserDto userDto) throws Exception {
+    // @PostMapping("/create")
+    // public ResponseEntity<SuccessResponse<UserDto>> createUser(@Valid @RequestBody UserDto userDto) throws Exception {
         
         
-		UserDto newuser=this.userService.createUser(userDto);
-		SuccessResponse<UserDto> respone=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,newuser);
-		return new ResponseEntity<SuccessResponse<UserDto>>(respone,HttpStatus.OK);
-    }
+	// 	UserDto newuser=this.userService.createUser(userDto);
+	// 	SuccessResponse<UserDto> respone=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,newuser);
+	// 	return new ResponseEntity<SuccessResponse<UserDto>>(respone,HttpStatus.OK);
+    // }
 
 	@GetMapping("/{username}")
 	public ResponseEntity<SuccessResponse<UserDto>> getUser(@PathVariable(name = "username") String username){
 	
-			UserDto user = this.userService.findByUsername(username);
-			SuccessResponse<UserDto> response=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,user);
+			// UserDto user = this.userService.findByUsername(username);
+			UserDto user=this.userService.findByUsername(username);
+			SuccessResponse<UserDto> response=new SuccessResponse<UserDto>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,user);
 		return new ResponseEntity<SuccessResponse<UserDto>>(response,HttpStatus.OK);
 	}
-
+	@GetMapping("/details/{username}")
+	public ResponseEntity<SuccessResponse<User>> getCompleteUser(@PathVariable(name = "username") String username){
+	
+			// UserDto user = this.userService.findByUsername(username);
+			User user=this.userService.getUserByUsername(username);
+			SuccessResponse<User> response=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,user);
+		return new ResponseEntity<SuccessResponse<User>>(response,HttpStatus.OK);
+	}
 	// @DeleteMapping("/delete/username/{username}")
 	// public ResponseEntity<ApiResponse> deleteUser(@PathVariable(name="username") String username){
 	// 	this.userService.deleteUserByUsername(username);

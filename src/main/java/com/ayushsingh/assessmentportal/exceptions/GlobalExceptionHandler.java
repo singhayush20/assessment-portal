@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.validation.ConstraintViolationException;
 
 import org.springframework.validation.FieldError;
 
@@ -65,4 +64,17 @@ public class GlobalExceptionHandler {
     //     return new ResponseEntity<Map<String, String>>(errors, HttpStatus.BAD_REQUEST);
     // }
 
+    @ExceptionHandler(InvalidTokenInHeaderException.class) // add comma separated list of Exception classes
+    public ResponseEntity<ApiResponse> invalidTokenException(InvalidTokenInHeaderException ex) {
+        String message = ex.getMessage();
+        ApiResponse apiResponse = new ApiResponse(AppConstants.ERROR_CODE, message, AppConstants.ERROR_MESSAGE);
+        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NoAdminPermissionException.class)
+    public ResponseEntity<ApiResponse> noPermissionException(NoAdminPermissionException ex) {
+        String message = ex.getMessage();
+        ApiResponse apiResponse = new ApiResponse(AppConstants.ERROR_CODE, message, AppConstants.ERROR_MESSAGE);
+        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.NOT_FOUND);
+    }
 }
