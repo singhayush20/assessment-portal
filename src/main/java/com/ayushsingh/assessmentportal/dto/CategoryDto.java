@@ -1,9 +1,12 @@
 package com.ayushsingh.assessmentportal.dto;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
@@ -14,7 +17,7 @@ public class CategoryDto {
     private String title;
     @NotBlank(message = "Description cannot be empty")
     private String description;
-    
-    private Set<QuizDto> quizzes=new LinkedHashSet<>();
+    @JsonIgnore
+    private List<QuizDto> quizzes=new ArrayList<>();
 
 }

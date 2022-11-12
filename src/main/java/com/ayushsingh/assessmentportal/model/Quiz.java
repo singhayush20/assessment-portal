@@ -1,7 +1,7 @@
 package com.ayushsingh.assessmentportal.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
 
 
@@ -40,7 +41,10 @@ public class Quiz {
 
    @OneToMany(mappedBy = "quiz",fetch = FetchType.LAZY/*Data is obtained when getter is called */,cascade = CascadeType.ALL)
 //    @JsonIgnore //use json igone so that we do not fetch questions 
-   private Set<Question> questions=new HashSet<>();
-
-   
+   private List<Question> questions=new ArrayList<>();
+   @PreRemove
+   public void removeCategory(){
+      System.out.println("Quiz: removing category for quizId: "+quizId);
+      this.category=null;
+   }
 }

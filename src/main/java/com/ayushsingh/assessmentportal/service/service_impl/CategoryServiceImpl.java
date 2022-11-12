@@ -46,6 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
             Category category=local.get();
             category.setTitle(categoryDto.getTitle());
             category.setDescription(categoryDto.getDescription());
+            category=this.categoryRepository.save(category);
             return this.categoryToDto(category);
         }
         else{
@@ -78,7 +79,7 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteCategory(String categoryId) {
         Optional<Category> category=this.categoryRepository.findById(Long.parseLong(categoryId));
        if(category.isPresent()){
-        this.deleteCategory(categoryId);
+        this.categoryRepository.deleteById(Long.parseLong(categoryId));
        }
        else
        throw new ResourceNotFoundException("Category", "category id", categoryId);

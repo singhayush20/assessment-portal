@@ -1,5 +1,6 @@
 package com.ayushsingh.assessmentportal.service.service_impl;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -38,9 +39,9 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Set<QuestionDto> getQuestions() {
+    public List<QuestionDto> getQuestions() {
         List<Question> questions = this.questionRepository.findAll();
-        Set<QuestionDto> questionDtos = new LinkedHashSet<>();
+        List<QuestionDto> questionDtos = new ArrayList<>();
         for (Question question : questions) {
             questionDtos.add(this.questionToDto(question));
         }
@@ -67,6 +68,17 @@ public class QuestionServiceImpl implements QuestionService {
         }
         return questionDtos;
     }
+    @Override
+    public void deleteQuestion(String questionId) {
+        Long qId = Long.parseLong(questionId);
+        Optional<Question> question = this.questionRepository.findById(qId);
+        if (question.isPresent()) {
+            this.questionRepository.deleteById(qId);
+        } else {
+            throw new ResourceNotFoundException("question", "question id", questionId);
+        }
+        
+    }
 
     QuestionDto questionToDto(Question question) {
         return this.modelMapper.map(question, QuestionDto.class);
@@ -79,5 +91,7 @@ public class QuestionServiceImpl implements QuestionService {
     private Quiz dtoToQuiz(QuizDto quizDto) {
         return this.modelMapper.map(quizDto, Quiz.class);
     }
+
+  
 
 }

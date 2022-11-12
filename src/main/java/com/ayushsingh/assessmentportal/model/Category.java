@@ -1,5 +1,7 @@
 package com.ayushsingh.assessmentportal.model;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -31,6 +33,11 @@ public class Category {
 
     @OneToMany(mappedBy = "category",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     // @JsonIgnore
-    private Set<Quiz> quizzes=new LinkedHashSet<>();
+    private List<Quiz> quizzes=new ArrayList<>();
+
+    public void deleteQuiz(Quiz quiz) {
+        System.out.println("Category: removing quiz from quiz list for category: "+categoryId);
+        this.quizzes.remove(quiz);
+    }
 
 }

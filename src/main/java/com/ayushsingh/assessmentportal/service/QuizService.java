@@ -1,6 +1,6 @@
 package com.ayushsingh.assessmentportal.service;
 
-import java.util.Set;
+import java.util.List;
 
 import com.ayushsingh.assessmentportal.dto.QuizDto;
 
@@ -10,7 +10,7 @@ public interface QuizService {
 
     public QuizDto updateQuiz(QuizDto quizDto,String quizId);
 
-    public Set<QuizDto> getQuizzes();
+    public List<QuizDto> getQuizzes();
 
     public QuizDto getQuizById(String quizId);
 

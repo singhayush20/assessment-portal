@@ -1,11 +1,11 @@
 package com.ayushsingh.assessmentportal.dto;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
-import com.ayushsingh.assessmentportal.model.Question;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
@@ -22,5 +22,6 @@ public class QuizDto {
     @NotBlank(message = "Active field cannot be empty")
     private boolean active=false;
     private CategoryDto category;
-    private Set<Question> questions=new HashSet<>();
+    @JsonIgnore
+    private List<QuestionDto> questions=new ArrayList<>();
 }
