@@ -50,6 +50,16 @@ public class GlobalExceptionHandler {
         errors.put(fieldName, error);
         return new ResponseEntity<Map<String, String>>(errors, HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(JWTAuthenticationException.class)
+    public ResponseEntity<Map<String, String>> handleAuthException(JWTAuthenticationException ex) {
+        Map<String, String> errors = new HashMap<>();
+        String fieldName = "errorMessage";
+        String error = ex.getMessage();
+        String status=ex.getStatus();
+        errors.put(fieldName, error);
+        errors.put("status",status);
+        return new ResponseEntity<Map<String, String>>(errors, HttpStatus.BAD_REQUEST);
+    }
 
     
     // @ExceptionHandler(ConstraintViolationException.class)
