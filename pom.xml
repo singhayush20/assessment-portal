@@ -94,9 +94,21 @@
 			<version>3.0.0</version>
 		</dependency> -->
 		
+		 <!--12. Email Service https://mvnrepository.com/artifact/com.sun.mail/javax.mail -->
+		 <dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.6.2</version>
+		  </dependency>
+		  <!--13. Guava for otp-->
+		  <dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>31.1-jre</version>
+		</dependency>
 		
 		
-		<!-- Spring Security Dependecies -->
+
 		
 		
 		<!-- For Java version>8 also include javax.xm.bind with spring security and jwt-->

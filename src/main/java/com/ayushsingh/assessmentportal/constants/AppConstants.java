@@ -22,4 +22,6 @@ public class AppConstants {
     public static final String BEARER="Bearer";
     public static final String ADMIN_KEY="adminkey";
 
+    
+
 }
