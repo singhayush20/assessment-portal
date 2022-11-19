@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.mail.internet.AddressException;
 
 import org.springframework.validation.FieldError;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -83,6 +85,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoAdminPermissionException.class)
     public ResponseEntity<ApiResponse> noPermissionException(NoAdminPermissionException ex) {
+        String message = ex.getMessage();
+        ApiResponse apiResponse = new ApiResponse(AppConstants.ERROR_CODE, message, AppConstants.ERROR_MESSAGE);
+        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiResponse> noParameterException(MissingServletRequestParameterException ex) {
+        String message = ex.getMessage();
+        ApiResponse apiResponse = new ApiResponse(AppConstants.ERROR_CODE, message, AppConstants.ERROR_MESSAGE);
+        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(AddressException.class)
+    public ResponseEntity<ApiResponse> addressException(MissingServletRequestParameterException ex) {
         String message = ex.getMessage();
         ApiResponse apiResponse = new ApiResponse(AppConstants.ERROR_CODE, message, AppConstants.ERROR_MESSAGE);
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.NOT_FOUND);

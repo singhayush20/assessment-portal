@@ -32,6 +32,7 @@ public class OtpServiceImpl implements OtpService {
     public int generateOTP(String email) {
         Random random = new Random();
         int otp = 100000 + random.nextInt(900000);
+        System.out.println("Saving generated otp for id: "+email+" otp: "+otp);
         otpCache.put(email, otp);
         return otp;
     }
@@ -39,8 +40,12 @@ public class OtpServiceImpl implements OtpService {
     @Override
     public int getOTP(String email) {
         try {
-            return otpCache.get(email);
+            int otp= otpCache.get(email);
+            System.out.println("Saved otp retrieved: "+otp+" email: "+email);
+            return otp;
         } catch (Exception e) {
+            System.out.println("Some error occurred");
+            e.printStackTrace();
             return 0;
         }
     }

@@ -31,7 +31,8 @@ public class SecurityConfig {
     private JwtAuthenticationFilter jwtAuthenticationFilter;
     
     private final String [] PUBLIC_URLS={
-        "/assessmentportal/authenticate/**"
+        "/assessmentportal/authenticate/**",
+        "/assessmentportal/authenticate/verifyemail/verify-otp"
     };
     
     @Bean

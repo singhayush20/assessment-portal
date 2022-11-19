@@ -77,6 +77,7 @@ public class EmailController {
         //     flag = true;
         // }
         int storedOTP=this.otpService.getOTP(email);
+        System.out.println("Stored OTP: "+storedOTP+" sent otp: "+otp);
         if(storedOTP==otp){
                 System.out.println("OTP is verified");
                 flag=true;
