@@ -1,6 +1,7 @@
 package com.ayushsingh.assessmentportal.service.service_impl;
 
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -56,9 +57,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Set<CategoryDto> getCategories() {
+    public List<CategoryDto> getCategories() {
         List<Category> categories=this.categoryRepository.findAll();
-        Set<CategoryDto> categoryDtos=new LinkedHashSet<>();
+        List<CategoryDto> categoryDtos=new ArrayList<>();
         for(Category category: categories){
             categoryDtos.add(this.categoryToDto(category));
         }

@@ -1,5 +1,6 @@
 package com.ayushsingh.assessmentportal.service.service_impl;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -41,15 +42,15 @@ public class UserServiceImpl implements UserService {
 
         // check if an user already exists
         User user = this.dtoToUser(userDto);
-        User local = this.userRepository.findByUsername(user.getUsername());
-        if (local != null) {
+        List<User> local = this.userRepository.findByEmail(user.getEmail());
+        if (local != null&&local.size()!=0) {
             // i.e., the user with this username is already present
             System.out.println(CLASS_NAME + " is user present: " + local.toString());
 
             System.out.println("User already exists");
             // throw an exception which will be handled by any
             // method which invokes this method
-            throw new DuplicateResourceException("User", "username", user.getUsername());
+            throw new DuplicateResourceException("User", "username", user.getUser_name());
         } else {
             System.out.println(CLASS_NAME + " user not present with these details");
             try {
@@ -58,14 +59,14 @@ public class UserServiceImpl implements UserService {
                 // save the users and the user roles will
                 // be saved automatically because of CacadeType.ALL
                 // on the UserRoles entities
-                local = this.userRepository.save(user);
+                user = this.userRepository.save(user);
             } catch (Exception e) {
                 throw e;
             }
             // create user
 
         }
-        return this.usertoDto(local);
+        return this.usertoDto(user);
     }
 
     // @Override
@@ -95,13 +96,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findByUsername(String username) {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUser_name(username);
         if (user == null) {
             throw new ResourceNotFoundException("User", "username", username);
         }
         return this.usertoDto(user);
     }
 
+    @Override
+    public UserDto findByEmail(String email) {
+        List<User> userList = userRepository.findByEmail(email);
+        System.out.println("findByEmail: userList: "+userList);
+        if (userList == null||userList.size()==0) {
+            throw new ResourceNotFoundException("User", "email", email);
+        }
+        return this.usertoDto(userList.get(0));
+    }
     private User dtoToUser(UserDto userDto) {
         return this.modelMapper.map(userDto, User.class);
     }
@@ -126,15 +136,15 @@ public class UserServiceImpl implements UserService {
             oldUser.setEmail(newUser.getEmail());
             oldUser.setFirstName(newUser.getFirstName());
             oldUser.setLastName(newUser.getLastName());
-            oldUser.setPassword(newUser.getPassword());
+            // oldUser.setPassword(newUser.getPassword());
             oldUser.setPhone(newUser.getPhone());
             oldUser.setEnabled(newUser.getEnabled());
             oldUser.setProfile(newUser.getProfile());
-            User temp = userRepository.findByUsername(newUser.getUsername());
+            User temp = userRepository.findByUser_name(newUser.getUser_name());
             if (temp != null) {
-                throw new DuplicateResourceException("user", "username", newUser.getUsername());
+                throw new DuplicateResourceException("user", "username", newUser.getUser_name());
             }
-            oldUser.setUsername(newUser.getUsername());
+            oldUser.setUser_name(newUser.getUser_name());
             newUser = this.userRepository.save(oldUser);
         }
         return this.usertoDto(oldUser);
@@ -144,9 +154,9 @@ public class UserServiceImpl implements UserService {
     public UserDto registerNewUser(UserDto userDto) {
 
         User user = this.modelMapper.map(userDto, User.class);
-        User local = this.userRepository.findByUsername(user.getUsername());
+        List<User> local = this.userRepository.findByEmail(user.getEmail());
         User newUser = null;
-        if (local == null) {
+        if (local.size()==0) {
             // encode the password
             user.setPassword(this.passwordEncoder.encode(user.getPassword()));
 
@@ -171,7 +181,7 @@ public class UserServiceImpl implements UserService {
     //To get the complete details of the user including authentication
     @Override
     public User getUserByUsername(String username) {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUser_name(username);
         if (user == null) {
             throw new ResourceNotFoundException("User", "username", username);
         }
@@ -185,9 +195,9 @@ public class UserServiceImpl implements UserService {
 
         }
         User user = this.modelMapper.map(userDto, User.class);
-        User local = this.userRepository.findByUsername(user.getUsername());
+        List<User> local = this.userRepository.findByEmail(user.getEmail());
         User newUser = null;
-        if (local == null) {
+        if (local.size()==0) {
             // encode the password
             user.setPassword(this.passwordEncoder.encode(user.getPassword()));
 
@@ -204,7 +214,7 @@ public class UserServiceImpl implements UserService {
              System.out.println("User already exists");
              // throw an exception which will be handled by any
              // method which invokes this method
-             throw new DuplicateResourceException("User", "username", user.getUsername());
+             throw new DuplicateResourceException("User", "username", user.getUser_name());
         }
 
         return this.usertoDto(newUser);

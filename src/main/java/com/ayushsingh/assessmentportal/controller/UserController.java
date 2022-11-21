@@ -40,11 +40,12 @@ public class UserController {
 	// 	return new ResponseEntity<SuccessResponse<UserDto>>(respone,HttpStatus.OK);
     // }
 
-	@GetMapping("/{username}")
-	public ResponseEntity<SuccessResponse<UserDto>> getUser(@PathVariable(name = "username") String username){
+	@GetMapping("/{email}")
+	public ResponseEntity<SuccessResponse<UserDto>> getUser(@PathVariable(name = "email") String email){
 	
 			// UserDto user = this.userService.findByUsername(username);
-			UserDto user=this.userService.findByUsername(username);
+			System.out.println("Fetching user for email: "+email);
+			UserDto user=this.userService.findByEmail(email);
 			SuccessResponse<UserDto> response=new SuccessResponse<UserDto>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,user);
 		return new ResponseEntity<SuccessResponse<UserDto>>(response,HttpStatus.OK);
 	}

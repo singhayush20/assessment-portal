@@ -84,7 +84,7 @@ public class AuthenticationController {
 
         UserDetails userDetails = this.userDetailsServiceImpl.loadUserByUsername(jwtRequest.getUsername());
         String token = this.jwtUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token));
+        return ResponseEntity.ok(new JwtResponse(token,AppConstants.SUCCESS_CODE,"Token successfully generated",AppConstants.SUCCESS_MESSAGE));
     }
 
     // Register new user api

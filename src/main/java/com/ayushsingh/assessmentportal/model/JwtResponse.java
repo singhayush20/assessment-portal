@@ -12,4 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class JwtResponse {
     private String token;
+    private String code;
+    private String message;
+    private String status;
 }

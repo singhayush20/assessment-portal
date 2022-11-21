@@ -1,6 +1,6 @@
 package com.ayushsingh.assessmentportal.service;
 
-import java.util.Set;
+import java.util.List;
 
 import com.ayushsingh.assessmentportal.dto.CategoryDto;
 
@@ -9,7 +9,7 @@ public interface CategoryService {
     public CategoryDto addCategory(CategoryDto categoryDto);
 
     public CategoryDto updateCategory(CategoryDto categoryDto,String categoryId);
-    public Set<CategoryDto> getCategories();
+    public List<CategoryDto> getCategories();
     
     public CategoryDto getCategoryById(String categoryId);
 

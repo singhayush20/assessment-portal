@@ -1,6 +1,9 @@
 package com.ayushsingh.assessmentportal.controller;
 
+import java.util.List;
 import java.util.Set;
+
+import javax.swing.ListCellRenderer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,10 +47,10 @@ public class CategoryController {
        return new ResponseEntity<ApiResponse>(new ApiResponse(AppConstants.SUCCESS_CODE, "Category Deleted Successfully", AppConstants.SUCCESS_MESSAGE), HttpStatus.OK);
     }
     @GetMapping("/")
-    public ResponseEntity<SuccessResponse<Set<CategoryDto>>> getCategories(){
-        Set<CategoryDto> categoryDtos=this.categoryService.getCategories();
-        SuccessResponse<Set<CategoryDto>> successResponse=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,categoryDtos);
-        return new ResponseEntity<SuccessResponse<Set<CategoryDto>>>(successResponse,HttpStatus.OK);
+    public ResponseEntity<SuccessResponse<List<CategoryDto>>> getCategories(){
+        List<CategoryDto> categoryDtos=this.categoryService.getCategories();
+        SuccessResponse<List<CategoryDto>> successResponse=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,categoryDtos);
+        return new ResponseEntity<SuccessResponse<List<CategoryDto>>>(successResponse,HttpStatus.OK);
     }
 
     @GetMapping(value="/{categoryId}")

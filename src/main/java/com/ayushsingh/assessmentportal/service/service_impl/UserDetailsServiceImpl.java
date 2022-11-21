@@ -1,5 +1,7 @@
 package com.ayushsingh.assessmentportal.service.service_impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,13 +24,13 @@ public class UserDetailsServiceImpl implements UserDetailsService{
     private UserRepository userRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        
-        User user=this.userRepository.findByUsername(username);
-        if(user==null){
+        List<User> userList=this.userRepository.findByEmail(username);
+        // User user=this.userRepository.findByUsername(username);
+        if(userList.size()==0){
             System.out.println(CLASS_NAME+" User not found");
-            throw new ResourceNotFoundException("User", "username", username);
+            throw new ResourceNotFoundException("User", "email", username);
         }
-        return user;
+        return userList.get(0);
     }
     
 }

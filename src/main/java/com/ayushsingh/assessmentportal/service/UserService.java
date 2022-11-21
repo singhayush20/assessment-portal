@@ -8,6 +8,7 @@ public interface UserService  {
     
     //creating user
     public UserDto createUser(UserDto user);
+    public UserDto findByEmail(String email);
     // creating user
 	// public User createUser(User user,List<UserRole> userRoles)throws Exception;//UserRole contain roles
     

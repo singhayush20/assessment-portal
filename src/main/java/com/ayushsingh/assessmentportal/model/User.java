@@ -35,7 +35,7 @@ public class User implements UserDetails /*
         @Column(name = "userid")
         private Long userId;
         @Column(name = "username", nullable = false, unique = true)
-        private String username;
+        private String user_name;
         @Column(name = "password", nullable = false)
         private String password;
         @Column(name = "lastname")
@@ -97,6 +97,7 @@ public class User implements UserDetails /*
 
         // This method will be called to get the list of authorities
         // the user has
+ 
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
                 // create authorites using roles and return
@@ -141,6 +142,11 @@ public class User implements UserDetails /*
 
                         return false;
                 }
+        }
+
+        @Override
+        public String getUsername() {
+                return email;
         }
 
 }
