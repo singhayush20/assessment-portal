@@ -19,6 +19,8 @@ import com.ayushsingh.assessmentportal.constants.AppConstants;
 import com.ayushsingh.assessmentportal.dto.QuizDto;
 import com.ayushsingh.assessmentportal.exceptions.ApiResponse;
 import com.ayushsingh.assessmentportal.exceptions.SuccessResponse;
+import com.ayushsingh.assessmentportal.model.Category;
+import com.ayushsingh.assessmentportal.service.CategoryService;
 import com.ayushsingh.assessmentportal.service.QuizService;
 
 @RestController
@@ -27,6 +29,8 @@ public class QuizController {
    
     @Autowired
     QuizService quizService;
+    @Autowired
+    CategoryService categoryService;
 
     @PostMapping("/create")
     public ResponseEntity<SuccessResponse<QuizDto>> create(@RequestBody QuizDto quizDto){
@@ -57,5 +61,12 @@ public ResponseEntity<SuccessResponse<QuizDto>> getQuizById(@PathVariable(name="
     public ResponseEntity<ApiResponse> deleteQuiz(@PathVariable String quizId){
         this.quizService.deleteQuiz(quizId);
         return new ResponseEntity<ApiResponse>(new ApiResponse(AppConstants.SUCCESS_CODE, "Quiz deleted Successfully", quizId), HttpStatus.OK);
+    }
+
+    @GetMapping("/getByCategory/{categoryId}")
+    public ResponseEntity<SuccessResponse<List<QuizDto>>> getQuizzesForCategory(@PathVariable("categoryId") Long categoryId){
+        List<QuizDto> quizzes=this.categoryService.getQuizzes(categoryId);
+        SuccessResponse<List<QuizDto>> successResponse=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,quizzes);
+        return new ResponseEntity<SuccessResponse<List<QuizDto>>>(successResponse,HttpStatus.OK);
     }
 }

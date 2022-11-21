@@ -2,19 +2,19 @@ package com.ayushsingh.assessmentportal.service.service_impl;
 
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ayushsingh.assessmentportal.dto.CategoryDto;
+import com.ayushsingh.assessmentportal.dto.QuizDto;
 import com.ayushsingh.assessmentportal.exceptions.DuplicateResourceException;
 import com.ayushsingh.assessmentportal.exceptions.ResourceNotFoundException;
 import com.ayushsingh.assessmentportal.model.Category;
+import com.ayushsingh.assessmentportal.model.Quiz;
 import com.ayushsingh.assessmentportal.repository.CategoryRepository;
 import com.ayushsingh.assessmentportal.service.CategoryService;
 @Service
@@ -95,5 +95,20 @@ public class CategoryServiceImpl implements CategoryService {
         CategoryDto categoryDto = this.modelMapper.map(category, CategoryDto.class);
         return categoryDto;
     }
-    
+    @Override
+    public List<QuizDto> getQuizzes(Long categoryId){
+        Category category=categoryRepository.findById(categoryId).get();
+        List<Quiz> quizList=category.getQuizzes();
+        List<QuizDto> quizzes=new ArrayList<>();
+        for(Quiz quiz: quizList){
+            quizzes.add(this.quizToDto(quiz));
+        }
+        return quizzes;
+    }
+    private QuizDto quizToDto(Quiz quiz){
+        return this.modelMapper.map(quiz, QuizDto.class);
+    }
+    // private Quiz dtoToQuiz(QuizDto quizDto){
+    //     return this.modelMapper.map(quizDto,Quiz.class);
+    // }
 }
