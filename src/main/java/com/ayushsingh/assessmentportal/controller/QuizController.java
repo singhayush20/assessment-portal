@@ -22,6 +22,7 @@ import com.ayushsingh.assessmentportal.exceptions.SuccessResponse;
 import com.ayushsingh.assessmentportal.model.Category;
 import com.ayushsingh.assessmentportal.service.CategoryService;
 import com.ayushsingh.assessmentportal.service.QuizService;
+import com.ayushsingh.assessmentportal.service.UserService;
 
 @RestController
 @RequestMapping("assessmentportal/quiz")
@@ -31,6 +32,8 @@ public class QuizController {
     QuizService quizService;
     @Autowired
     CategoryService categoryService;
+    @Autowired
+    UserService userService;
 
     @PostMapping("/create")
     public ResponseEntity<SuccessResponse<QuizDto>> create(@RequestBody QuizDto quizDto){
@@ -66,6 +69,13 @@ public ResponseEntity<SuccessResponse<QuizDto>> getQuizById(@PathVariable(name="
     @GetMapping("/getByCategory/{categoryId}")
     public ResponseEntity<SuccessResponse<List<QuizDto>>> getQuizzesForCategory(@PathVariable("categoryId") Long categoryId){
         List<QuizDto> quizzes=this.categoryService.getQuizzes(categoryId);
+        SuccessResponse<List<QuizDto>> successResponse=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,quizzes);
+        return new ResponseEntity<SuccessResponse<List<QuizDto>>>(successResponse,HttpStatus.OK);
+    }
+
+    @GetMapping("/getByAdmin/{adminid}")
+    public ResponseEntity<SuccessResponse<List<QuizDto>>> getQuizzesForAdmin(@PathVariable("adminid") Long adminid){
+       List<QuizDto> quizzes=this.userService.getQuizzesByAdmin(adminid);
         SuccessResponse<List<QuizDto>> successResponse=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,quizzes);
         return new ResponseEntity<SuccessResponse<List<QuizDto>>>(successResponse,HttpStatus.OK);
     }

@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -90,6 +91,8 @@ public class User implements UserDetails /*
                                         referencedColumnName = "roleid"))
         private List<Role> roles = new ArrayList<>();
 
+        @OneToMany(mappedBy = "adminUser",cascade = CascadeType.ALL)
+        private List<Quiz> createdQuizzes=new ArrayList<>();
         /*
          * Spring Security: UserDetails methods
          * These methods are used by Spring Security

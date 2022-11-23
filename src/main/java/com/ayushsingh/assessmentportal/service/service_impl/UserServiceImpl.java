@@ -1,5 +1,6 @@
 package com.ayushsingh.assessmentportal.service.service_impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,10 +11,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ayushsingh.assessmentportal.constants.AppConstants;
+import com.ayushsingh.assessmentportal.dto.QuizDto;
 import com.ayushsingh.assessmentportal.dto.UserDto;
 import com.ayushsingh.assessmentportal.exceptions.DuplicateResourceException;
 import com.ayushsingh.assessmentportal.exceptions.NoAdminPermissionException;
 import com.ayushsingh.assessmentportal.exceptions.ResourceNotFoundException;
+import com.ayushsingh.assessmentportal.model.Quiz;
 import com.ayushsingh.assessmentportal.model.Role;
 import com.ayushsingh.assessmentportal.model.User;
 import com.ayushsingh.assessmentportal.repository.RoleRepository;
@@ -69,16 +72,7 @@ public class UserServiceImpl implements UserService {
         return this.usertoDto(user);
     }
 
-    // @Override
-    // public void deleteUserByUsername(String username) {
-    // User local=this.userRepository.findByUsername(username);
-    // if(local==null){
-    // throw new ResourceNotFoundException("User", "username", username);
-    // }
-    // else{
-    // this.userRepository.deleteByUsername(username);
-    // }
-    // }
+
 
     @Override
     public void deleteUserbyId(String id) {
@@ -105,6 +99,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findByEmail(String email) {
+        System.out.println("UserServiceImpl: Loading user for email: "+email);
         List<User> userList = userRepository.findByEmail(email);
         System.out.println("findByEmail: userList: "+userList);
         if (userList == null||userList.size()==0) {
@@ -190,11 +185,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto registerAdminUser(UserDto userDto, String key) {
+        System.out.println("UserDto username: "+userDto.getUser_name());
         if(key.equals(AppConstants.ADMIN_KEY)){
             throw new NoAdminPermissionException("Admin Key required");
 
         }
         User user = this.modelMapper.map(userDto, User.class);
+        System.out.println("Saving user with username: "+user.getUser_name());
         List<User> local = this.userRepository.findByEmail(user.getEmail());
         User newUser = null;
         if (local.size()==0) {
@@ -220,5 +217,20 @@ public class UserServiceImpl implements UserService {
         return this.usertoDto(newUser);
     }
 
+    @Override
+    public List<QuizDto> getQuizzesByAdmin(Long adminid) {
+        User user=userRepository.findById(adminid).get();
+        List<Quiz> createdQuizzes=user.getCreatedQuizzes();
+        List<QuizDto> quizzes=new ArrayList<>();
+        for(Quiz quiz: createdQuizzes){
+            quizzes.add(this.quizToDto(quiz));
+        }
+        return quizzes;
+    }
+
+    
+    private QuizDto quizToDto(Quiz quiz){
+        return this.modelMapper.map(quiz, QuizDto.class);
+    }
     
 }

@@ -24,4 +24,6 @@ public class QuizDto {
     private CategoryDto category;
     @JsonIgnore
     private List<QuestionDto> questions=new ArrayList<>();
+    @JsonIgnore
+    private UserDto adminUser;
 }

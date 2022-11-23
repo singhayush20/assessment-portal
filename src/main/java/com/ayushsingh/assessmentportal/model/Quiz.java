@@ -42,9 +42,14 @@ public class Quiz {
    @OneToMany(mappedBy = "quiz",fetch = FetchType.LAZY/*Data is obtained when getter is called */,cascade = CascadeType.ALL)
 //    @JsonIgnore //use json igone so that we do not fetch questions 
    private List<Question> questions=new ArrayList<>();
+   @ManyToOne(fetch = FetchType.EAGER)
+   private User adminUser;
    @PreRemove
    public void removeCategory(){
       System.out.println("Quiz: removing category for quizId: "+quizId);
       this.category=null;
+      System.out.println("Quiz: removing the admin user for quizid: "+quizId);
+      this.adminUser=null;
    }
+
 }
