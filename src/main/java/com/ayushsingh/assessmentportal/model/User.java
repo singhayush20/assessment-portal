@@ -94,6 +94,9 @@ public class User implements UserDetails /*
         
         @OneToMany(mappedBy = "adminUser",cascade = CascadeType.ALL)
         private List<Quiz> createdQuizzes=new ArrayList<>();
+
+        @OneToMany(mappedBy = "adminUser",cascade = CascadeType.ALL)
+        private List<Category> createdCategories=new ArrayList<>();
         /*
          * Spring Security: UserDetails methods
          * These methods are used by Spring Security

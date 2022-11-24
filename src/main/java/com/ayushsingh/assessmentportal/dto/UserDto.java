@@ -37,6 +37,8 @@ public class UserDto {
     @JsonIgnore
     private List<QuizDto> createdQuizzes=new ArrayList<>();
 
+    @JsonIgnore
+    private List<CategoryDto> createdCategories=new ArrayList<>();
     public Long getUserId() {
         return userId;
     }

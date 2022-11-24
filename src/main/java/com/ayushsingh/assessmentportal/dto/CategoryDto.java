@@ -19,4 +19,6 @@ public class CategoryDto {
     @JsonIgnore
     private List<QuizDto> quizzes=new ArrayList<>();
 
+    @JsonIgnore
+    private UserDto adminUser;
 }

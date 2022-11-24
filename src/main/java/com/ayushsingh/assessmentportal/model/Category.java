@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -33,9 +34,13 @@ public class Category {
     // @JsonIgnore
     private List<Quiz> quizzes=new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User adminUser;
+    
     public void deleteQuiz(Quiz quiz) {
         System.out.println("Category: removing quiz from quiz list for category: "+categoryId);
         this.quizzes.remove(quiz);
+        this.adminUser=null;
     }
 
 }

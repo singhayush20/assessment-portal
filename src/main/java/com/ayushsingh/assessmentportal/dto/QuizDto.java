@@ -26,6 +26,7 @@ public class QuizDto {
     private List<QuestionDto> questions=new ArrayList<>();
     @JsonIgnore
     private UserDto adminUser;
+    
     public Long getQuizId() {
         return quizId;
     }
