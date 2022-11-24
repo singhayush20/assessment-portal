@@ -92,7 +92,15 @@ public class QuizServiceImpl implements QuizService {
     @Override
     public QuizDto updateQuiz(QuizDto quizDto, String quizId) {
       Quiz quiz=this.dtoToQuiz(quizDto);
-      Quiz updatedQuiz=this.quizRepository.save(quiz);//either save new or update existing
+        Quiz oldQuiz=this.quizRepository.findById(quiz.getQuizId()).get();
+        //we do not update the category and the user,
+        //if saved directly they will be set to null
+        oldQuiz.setActive(quiz.isActive());
+        oldQuiz.setDescription(quiz.getDescription());
+        oldQuiz.setMaxMarks(quiz.getMaxMarks());
+        oldQuiz.setNumberOfQuestions(quiz.getNumberOfQuestions());
+        oldQuiz.setTitle(quiz.getTitle());
+      Quiz updatedQuiz=this.quizRepository.save(oldQuiz);//either save new or update existing
       return this.quizToDto(updatedQuiz);
     }
     
