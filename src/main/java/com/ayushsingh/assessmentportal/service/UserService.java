@@ -30,5 +30,5 @@ public interface UserService  {
     UserDto registerAdminUser(UserDto userDto,String key);
 
     //return the quizzes created by this user
-    List<QuizDto> getQuizzesByAdmin(Long adminid);
+    List<QuizDto> getQuizzesByAdminAndCategory(Long adminid,Long categoryId);
 }

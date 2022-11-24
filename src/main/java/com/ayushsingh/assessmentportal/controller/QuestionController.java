@@ -1,10 +1,8 @@
 package com.ayushsingh.assessmentportal.controller;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +21,6 @@ import com.ayushsingh.assessmentportal.dto.QuestionDto;
 import com.ayushsingh.assessmentportal.dto.QuizDto;
 import com.ayushsingh.assessmentportal.exceptions.ApiResponse;
 import com.ayushsingh.assessmentportal.exceptions.SuccessResponse;
-import com.ayushsingh.assessmentportal.model.Quiz;
 import com.ayushsingh.assessmentportal.service.QuestionService;
 import com.ayushsingh.assessmentportal.service.QuizService;
 

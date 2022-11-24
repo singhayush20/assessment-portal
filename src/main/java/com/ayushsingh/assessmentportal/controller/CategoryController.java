@@ -1,9 +1,7 @@
 package com.ayushsingh.assessmentportal.controller;
 
 import java.util.List;
-import java.util.Set;
 
-import javax.swing.ListCellRenderer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,8 +27,8 @@ public class CategoryController {
     
     @Autowired
     CategoryService categoryService;
-    @PostMapping("/create")
-    public ResponseEntity<SuccessResponse<CategoryDto>> createCategory(@RequestBody CategoryDto categoryDto){
+    @PostMapping("/create/{adminId}")
+    public ResponseEntity<SuccessResponse<CategoryDto>> createCategory(@RequestBody CategoryDto categoryDto,@PathVariable("adminId") Long adminId){
         categoryDto=this.categoryService.addCategory(categoryDto);
         SuccessResponse<CategoryDto> successResponse=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,categoryDto);
         return new ResponseEntity<SuccessResponse<CategoryDto>>(successResponse,HttpStatus.OK);

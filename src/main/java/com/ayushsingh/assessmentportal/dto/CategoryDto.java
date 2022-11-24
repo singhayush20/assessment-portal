@@ -1,7 +1,6 @@
 package com.ayushsingh.assessmentportal.dto;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;

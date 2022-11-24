@@ -6,7 +6,7 @@ import com.ayushsingh.assessmentportal.dto.QuizDto;
 
 public interface QuizService {
     
-    public QuizDto addQuiz(QuizDto quizDto);
+    public QuizDto addQuiz(QuizDto quizDto,Long userid);
 
     public QuizDto updateQuiz(QuizDto quizDto,String quizId);
 

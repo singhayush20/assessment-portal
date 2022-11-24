@@ -168,7 +168,7 @@ public class UserServiceImpl implements UserService {
              System.out.println("User already exists");
              // throw an exception which will be handled by any
              // method which invokes this method
-             throw new DuplicateResourceException("User", "username", user.getUsername());
+             throw new DuplicateResourceException("User", "username", user.getEmail());
         }
 
         return this.usertoDto(newUser);
@@ -218,15 +218,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<QuizDto> getQuizzesByAdmin(Long adminid) {
+    public List<QuizDto> getQuizzesByAdminAndCategory(Long adminid,Long categoryId) {
         User user=userRepository.findById(adminid).get();
         List<Quiz> createdQuizzes=user.getCreatedQuizzes();
         List<QuizDto> quizzes=new ArrayList<>();
         for(Quiz quiz: createdQuizzes){
-            quizzes.add(this.quizToDto(quiz));
+            if(quiz.getCategory().getCategoryId()==categoryId){
+                quizzes.add(this.quizToDto(quiz));
+            }
         }
         return quizzes;
     }
+
+    // @Override
+    // public List<QuizDto> getQuizzesByAdminAndCategory(Long adminId, Long categoryId){
+    //     User user=userRepository.findById(adminId).get();
+    //     List<Quiz> createdQuizzes=user.getCreatedQuizzes();
+
+    // }
 
     
     private QuizDto quizToDto(Quiz quiz){

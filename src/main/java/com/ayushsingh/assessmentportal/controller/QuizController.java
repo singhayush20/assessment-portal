@@ -1,7 +1,6 @@
 package com.ayushsingh.assessmentportal.controller;
 
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,13 +12,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ayushsingh.assessmentportal.constants.AppConstants;
 import com.ayushsingh.assessmentportal.dto.QuizDto;
 import com.ayushsingh.assessmentportal.exceptions.ApiResponse;
 import com.ayushsingh.assessmentportal.exceptions.SuccessResponse;
-import com.ayushsingh.assessmentportal.model.Category;
 import com.ayushsingh.assessmentportal.service.CategoryService;
 import com.ayushsingh.assessmentportal.service.QuizService;
 import com.ayushsingh.assessmentportal.service.UserService;
@@ -36,8 +35,9 @@ public class QuizController {
     UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<SuccessResponse<QuizDto>> create(@RequestBody QuizDto quizDto){
-        quizDto=this.quizService.addQuiz(quizDto);
+    public ResponseEntity<SuccessResponse<QuizDto>> create(@RequestBody QuizDto quizDto,@RequestParam("userid") Long userid){
+        System.out.println("QuizController: Creating quiz: "+quizDto+" userid: "+userid);
+        quizDto=this.quizService.addQuiz(quizDto,userid);
         SuccessResponse<QuizDto> successResponse=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,quizDto);
         return new ResponseEntity<SuccessResponse<QuizDto>>(successResponse,HttpStatus.OK);
     }
@@ -73,9 +73,9 @@ public ResponseEntity<SuccessResponse<QuizDto>> getQuizById(@PathVariable(name="
         return new ResponseEntity<SuccessResponse<List<QuizDto>>>(successResponse,HttpStatus.OK);
     }
 
-    @GetMapping("/getByAdmin/{adminid}")
-    public ResponseEntity<SuccessResponse<List<QuizDto>>> getQuizzesForAdmin(@PathVariable("adminid") Long adminid){
-       List<QuizDto> quizzes=this.userService.getQuizzesByAdmin(adminid);
+    @GetMapping("/getByAdmin")
+    public ResponseEntity<SuccessResponse<List<QuizDto>>> getQuizzesForAdminByCategory(@RequestParam("adminid") Long adminid,@RequestParam("categoryid") Long categoryId){
+       List<QuizDto> quizzes=this.userService.getQuizzesByAdminAndCategory(adminid,categoryId);
         SuccessResponse<List<QuizDto>> successResponse=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,quizzes);
         return new ResponseEntity<SuccessResponse<List<QuizDto>>>(successResponse,HttpStatus.OK);
     }

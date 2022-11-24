@@ -44,7 +44,7 @@ public class UserController {
 	public ResponseEntity<SuccessResponse<UserDto>> getUser(@PathVariable(name = "email") String email){
 	
 			// UserDto user = this.userService.findByUsername(username);
-			System.out.println("Fetching user for email: "+email);
+			System.out.println(CLASS_NAME+"Fetching user for email: "+email);
 			UserDto user=this.userService.findByEmail(email);
 			SuccessResponse<UserDto> response=new SuccessResponse<UserDto>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,user);
 		return new ResponseEntity<SuccessResponse<UserDto>>(response,HttpStatus.OK);
