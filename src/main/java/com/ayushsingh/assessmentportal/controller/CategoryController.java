@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ayushsingh.assessmentportal.constants.AppConstants;
 import com.ayushsingh.assessmentportal.dto.CategoryDto;
+import com.ayushsingh.assessmentportal.dto.QuizDto;
 import com.ayushsingh.assessmentportal.exceptions.ApiResponse;
 import com.ayushsingh.assessmentportal.exceptions.SuccessResponse;
 import com.ayushsingh.assessmentportal.service.CategoryService;
@@ -27,9 +28,11 @@ public class CategoryController {
     
     @Autowired
     CategoryService categoryService;
-    @PostMapping("/create/{adminId}")
-    public ResponseEntity<SuccessResponse<CategoryDto>> createCategory(@RequestBody CategoryDto categoryDto,@PathVariable("adminId") Long adminId){
-        categoryDto=this.categoryService.addCategory(categoryDto);
+    //Create category by adminid
+    @PostMapping("/create/{adminid}")
+    public ResponseEntity<SuccessResponse<CategoryDto>> createCategory(@RequestBody CategoryDto categoryDto,@PathVariable("adminid") Long adminid){
+        System.out.println("Creating quiz: "+categoryDto);
+        categoryDto=this.categoryService.addCategory(categoryDto,adminid);
         SuccessResponse<CategoryDto> successResponse=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,categoryDto);
         return new ResponseEntity<SuccessResponse<CategoryDto>>(successResponse,HttpStatus.OK);
     }
@@ -50,8 +53,14 @@ public class CategoryController {
         SuccessResponse<List<CategoryDto>> successResponse=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,categoryDtos);
         return new ResponseEntity<SuccessResponse<List<CategoryDto>>>(successResponse,HttpStatus.OK);
     }
-
-    @GetMapping(value="/{categoryId}")
+    //fetch categories by admin
+    @GetMapping("all/{userId}")
+    public ResponseEntity<SuccessResponse<List<CategoryDto>>> getCategories(@PathVariable(name="userId") Long userId){
+        List<CategoryDto> categoryDtos=this.categoryService.getCategoriesByAdmin(userId);
+        SuccessResponse<List<CategoryDto>> successResponse=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,categoryDtos);
+        return new ResponseEntity<SuccessResponse<List<CategoryDto>>>(successResponse,HttpStatus.OK);
+    }
+    @GetMapping("/{categoryId}")
     public ResponseEntity<SuccessResponse<CategoryDto>>  getCategoryById(@PathVariable(name = "categoryId") String categoryId) {
         CategoryDto categoryDto=this.categoryService.getCategoryById(categoryId);
         SuccessResponse<CategoryDto> successResponse=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,categoryDto);

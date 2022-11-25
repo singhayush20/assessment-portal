@@ -15,7 +15,9 @@ import com.ayushsingh.assessmentportal.exceptions.DuplicateResourceException;
 import com.ayushsingh.assessmentportal.exceptions.ResourceNotFoundException;
 import com.ayushsingh.assessmentportal.model.Category;
 import com.ayushsingh.assessmentportal.model.Quiz;
+import com.ayushsingh.assessmentportal.model.User;
 import com.ayushsingh.assessmentportal.repository.CategoryRepository;
+import com.ayushsingh.assessmentportal.repository.UserRepository;
 import com.ayushsingh.assessmentportal.service.CategoryService;
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -24,13 +26,19 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private UserRepository userRepository;
     @Override
-    public CategoryDto addCategory(CategoryDto categoryDto) {
+    public CategoryDto addCategory(CategoryDto categoryDto,Long adminid) {
         Category category=this.dtoToCategory(categoryDto);
         Category temp=this.categoryRepository.findByTitle(categoryDto.getTitle());
         if(temp==null){
+            User user=this.userRepository.findById(adminid).get();
+            //do this manually because we are using @JsonIgnore on the adminUser of
+            //the category dto, it will prevent deserialization from JSON and thus the 
+            //admin user will be set to null
+            category.setAdminUser(user);
             category=this.categoryRepository.save(category);
-
         }
         else{
             throw new DuplicateResourceException("category", "title", categoryDto.getTitle());
@@ -111,4 +119,17 @@ public class CategoryServiceImpl implements CategoryService {
     // private Quiz dtoToQuiz(QuizDto quizDto){
     //     return this.modelMapper.map(quizDto,Quiz.class);
     // }
+
+    @Override
+    public List<CategoryDto> getCategoriesByAdmin(Long adminId) {
+        User user=this.userRepository.findById(adminId).get();
+        List<Category> categories=user.getCreatedCategories();
+        List<CategoryDto> categoryDtos=new ArrayList<>();
+        for(Category category: categories){
+            categoryDtos.add(this.categoryToDto(category));
+        }
+        return categoryDtos;
+    }
+
+    
 }

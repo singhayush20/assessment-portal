@@ -220,10 +220,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<QuizDto> getQuizzesByAdminAndCategory(Long adminid,Long categoryId) {
         User user=userRepository.findById(adminid).get();
+        System.out.println("category id: "+categoryId+" userid: "+adminid);
         List<Quiz> createdQuizzes=user.getCreatedQuizzes();
+        System.out.println("Number of quizzes: "+createdQuizzes.size());
         List<QuizDto> quizzes=new ArrayList<>();
         for(Quiz quiz: createdQuizzes){
-            if(quiz.getCategory().getCategoryId()==categoryId){
+            System.out.println("Quiz: quiz id: "+quiz.getQuizId()+" categoryId: "+quiz.getCategory().getCategoryId());
+            if(quiz.getCategory().getCategoryId().equals(categoryId)){
+                System.out.println("adding Quiz: quiz id: "+quiz.getQuizId()+" categoryId: "+quiz.getCategory().getCategoryId());
+
                 quizzes.add(this.quizToDto(quiz));
             }
         }

@@ -40,7 +40,7 @@ public class QuizServiceImpl implements QuizService {
         //line this.quizToDto(quiz) invokes the ovrridden method isEnabled() in User class,
         //it throws an error of enabled attribute being null.
         //Two problems-
-        //1. atomatic saving of user is not working
+        //1. automatic saving of user is not working
         //2. why the isEnabled() method is invoked?
         quizDto.setAdminUser(this.usertoDto(user));
         System.out.println("quizDto created: "+quizDto);

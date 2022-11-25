@@ -7,7 +7,7 @@ import com.ayushsingh.assessmentportal.dto.QuizDto;
 
 public interface CategoryService {
     
-    public CategoryDto addCategory(CategoryDto categoryDto);
+    public CategoryDto addCategory(CategoryDto categoryDto,Long adminid);
 
     public CategoryDto updateCategory(CategoryDto categoryDto,String categoryId);
     public List<CategoryDto> getCategories();
@@ -17,4 +17,5 @@ public interface CategoryService {
     public void deleteCategory(String categoryId);
 
     public List<QuizDto> getQuizzes(Long categoryId);
+    public List<CategoryDto> getCategoriesByAdmin(Long adminId);
 }

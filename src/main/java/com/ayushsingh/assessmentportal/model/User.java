@@ -24,8 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 
 
-// @Getter
-// @Setter
+
 @Entity
 @Table(name = "user") // to give a name of our choice to the table
 public class User implements UserDetails /*
@@ -141,7 +140,8 @@ public class User implements UserDetails /*
                 // return false
                 // this will disable account
                 System.out.println("is enabled: "+enabled);
-                if (this.enabled.equalsIgnoreCase(enabled)) {
+                //check if enabled is null or not- NullPointerException on __toDto conversion
+                if (this.enabled!=null&&this.enabled.equalsIgnoreCase(enabled)) {
                         System.out.println(User.class.getName()+" User is enabled");
                         return true;
                 } else {
@@ -243,5 +243,15 @@ public class User implements UserDetails /*
         public void setCreatedQuizzes(List<Quiz> createdQuizzes) {
                 this.createdQuizzes = createdQuizzes;
         }
+
+        public List<Category> getCreatedCategories() {
+                return createdCategories;
+        }
+
+        public void setCreatedCategories(List<Category> createdCategories) {
+                this.createdCategories = createdCategories;
+        }
+
+        
 
 }

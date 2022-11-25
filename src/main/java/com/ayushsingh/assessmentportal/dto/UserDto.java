@@ -9,7 +9,6 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.Data;
 // @Data
 public class UserDto {
     
@@ -126,4 +125,17 @@ public class UserDto {
     public void setCreatedQuizzes(List<QuizDto> createdQuizzes) {
         this.createdQuizzes = createdQuizzes;
     }
+
+    public List<CategoryDto> getCreatedCategories() {
+        return createdCategories;
+    }
+
+    public void setCreatedCategories(List<CategoryDto> createdCategories) {
+        this.createdCategories = createdCategories;
+    }
+
+
+   
+
+    
 }

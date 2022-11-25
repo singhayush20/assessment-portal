@@ -14,11 +14,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
-import lombok.Data;
 
 @Entity
 @Table(name="category")
-@Data
 public class Category {
     
     @Id
@@ -34,7 +32,8 @@ public class Category {
     // @JsonIgnore
     private List<Quiz> quizzes=new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
+    // @ManyToOne
     private User adminUser;
     
     public void deleteQuiz(Quiz quiz) {
@@ -42,5 +41,46 @@ public class Category {
         this.quizzes.remove(quiz);
         this.adminUser=null;
     }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<Quiz> getQuizzes() {
+        return quizzes;
+    }
+
+    public void setQuizzes(List<Quiz> quizzes) {
+        this.quizzes = quizzes;
+    }
+
+    public User getAdminUser() {
+        return adminUser;
+    }
+
+    public void setAdminUser(User adminUser) {
+        this.adminUser = adminUser;
+    }
+        
 
 }
