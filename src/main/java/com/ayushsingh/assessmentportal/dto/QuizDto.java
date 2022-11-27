@@ -7,7 +7,6 @@ import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.Data;
 
 // @Data
 public class QuizDto {

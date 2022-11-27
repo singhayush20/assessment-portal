@@ -2,6 +2,7 @@ package com.ayushsingh.assessmentportal.dto;
 
 import javax.validation.constraints.NotBlank;
 
+
 import lombok.Data;
 
 @Data
@@ -17,6 +18,5 @@ public class QuestionDto {
     private String option3;
     private String option4;
     private String answer;
-
     private QuizDto quiz;
 }

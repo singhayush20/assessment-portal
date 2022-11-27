@@ -2,6 +2,8 @@ package com.ayushsingh.assessmentportal.controller;
 
 
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +15,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ayushsingh.assessmentportal.constants.AppConstants;
+import com.ayushsingh.assessmentportal.dto.CategoryDto;
 import com.ayushsingh.assessmentportal.dto.UserDto;
 import com.ayushsingh.assessmentportal.exceptions.ApiResponse;
 import com.ayushsingh.assessmentportal.exceptions.SuccessResponse;
@@ -68,7 +72,7 @@ public class UserController {
 		return new ResponseEntity<ApiResponse>(new ApiResponse(AppConstants.SUCCESS_CODE, "User deleted successfully", AppConstants.SUCCESS_MESSAGE), HttpStatus.OK);
 	}
 
-	@PutMapping("update/{id}")
+	@PutMapping("/update/{id}")
 	
 	public ResponseEntity<SuccessResponse<UserDto>> updateUser(@Valid @RequestBody UserDto userDto,@PathVariable(name="id") String id) throws Exception {
         
@@ -78,6 +82,17 @@ public class UserController {
 		return new ResponseEntity<SuccessResponse<UserDto>>(respone,HttpStatus.OK);
     }
 
-    
+	@GetMapping("/enrolledcategories/all/{userid}")
+	public ResponseEntity<SuccessResponse<List<CategoryDto>>> getAllEnrolledCategories(@PathVariable(name="userid") Long userid){
+		List<CategoryDto> categoryDtos=this.userService.getEnrolledCategories(userid);
+		SuccessResponse<List<CategoryDto>> successResponse=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,categoryDtos);
+		return new ResponseEntity<SuccessResponse<List<CategoryDto>>>(successResponse,HttpStatus.OK);
+	}
+
+	@PutMapping("/enrolledcategories/all/add")
+	public ResponseEntity<ApiResponse> addUserbyIdToCategory(@RequestParam(name = "userid") Long userid, @RequestParam(name="categoryid") Long categoryid){
+		this.userService.addEnrolledCategory(userid, categoryid);
+		return new ResponseEntity<ApiResponse>(new ApiResponse(AppConstants.SUCCESS_CODE, "Category added successfully", AppConstants.SUCCESS_MESSAGE), HttpStatus.OK);
+	}
 	
 }

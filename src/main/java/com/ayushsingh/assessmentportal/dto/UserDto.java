@@ -32,6 +32,15 @@ public class UserDto {
     private String profile;
     
     private List<RoleDto> roles=new ArrayList<>();
+    private List<CategoryDto> enrollCategories=new ArrayList<>();
+
+    public List<CategoryDto> getEnrollCategories() {
+        return enrollCategories;
+    }
+
+    public void setEnrollCategories(List<CategoryDto> enrollCategories) {
+        this.enrollCategories = enrollCategories;
+    }
 
     @JsonIgnore
     private List<QuizDto> createdQuizzes=new ArrayList<>();

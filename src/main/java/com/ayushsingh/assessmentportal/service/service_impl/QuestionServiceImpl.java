@@ -16,6 +16,7 @@ import com.ayushsingh.assessmentportal.exceptions.ResourceNotFoundException;
 import com.ayushsingh.assessmentportal.model.Question;
 import com.ayushsingh.assessmentportal.model.Quiz;
 import com.ayushsingh.assessmentportal.repository.QuestionRepository;
+import com.ayushsingh.assessmentportal.repository.QuizRepository;
 import com.ayushsingh.assessmentportal.service.QuestionService;
 
 @Service
@@ -23,6 +24,9 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Autowired
     QuestionRepository questionRepository;
+
+    @Autowired
+    QuizRepository quizRepository;
 
     @Autowired
     ModelMapper modelMapper;
@@ -60,9 +64,11 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Set<QuestionDto> getQuestionsOfQuiz(QuizDto quizDto) {
-        Set<Question> questions = this.questionRepository.findByQuiz(this.dtoToQuiz(quizDto));
-        Set<QuestionDto> questionDtos = new LinkedHashSet<>();
+    public List<QuestionDto> getQuestionsOfQuiz(Long quizId) {
+        // Set<Question> questions = this.questionRepository.findByQuiz(this.dtoToQuiz(quizDto));
+        Quiz quiz=this.quizRepository.findById(quizId).get();
+        List<Question> questions=quiz.getQuestions();
+        List<QuestionDto> questionDtos = new ArrayList<>();
         for (Question question : questions) {
             questionDtos.add(this.questionToDto(question));
         }

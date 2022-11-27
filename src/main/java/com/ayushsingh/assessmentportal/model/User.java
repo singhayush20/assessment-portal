@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -96,6 +97,46 @@ public class User implements UserDetails /*
 
         @OneToMany(mappedBy = "adminUser",cascade = CascadeType.ALL)
         private List<Category> createdCategories=new ArrayList<>();
+
+
+        @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE,
+                CascadeType.REFRESH }, fetch = FetchType.LAZY) 
+                //each normal user can be enrolled in many categories
+                                                                                                
+@JoinTable(name = "enrolled", // the name of the table which manages this relationship
+                // specify the join columns in that table
+                joinColumns = @JoinColumn(
+                                /*
+                                 * name of the join column
+                                 * The name of the foreign key column which stores the user id
+                                 * The table in which it is found depends upon the context.
+                                 */
+                                name = "user",
+                                /*
+                                 * The name of the primary key in the
+                                 * user table which works as the foreign key in this table
+                                 * column.
+                                 */
+                                referencedColumnName = "userid"),
+                /*
+                 * The foreign key columns of the join table which reference the primary table
+                 * of the entity that does not own the association. (I.e. the inverse side of
+                 * the association).
+                 */
+                inverseJoinColumns = @JoinColumn(
+                                /*
+                                 * The name of the foreign key column. The table in which it is found depends
+                                 * upon the context. The column which keeps the role id in this table
+                                 */
+                                name = "category",
+
+                                /*
+                                 * The name of the column referenced by this foreign key column. The primary key
+                                 * in the role table working as the foreign key in this table
+                                 */
+                                referencedColumnName = "category_id"))
+        Set<Category> enrolledCategories=new HashSet<>();
+
         /*
          * Spring Security: UserDetails methods
          * These methods are used by Spring Security
@@ -149,6 +190,11 @@ public class User implements UserDetails /*
 
                         return false;
                 }
+        }
+        @PreRemove
+        public void removeCategories(){
+                this.enrolledCategories=null;
+                System.out.println("Categories set to null for user: "+this.userId);
         }
 
         @Override
@@ -250,6 +296,14 @@ public class User implements UserDetails /*
 
         public void setCreatedCategories(List<Category> createdCategories) {
                 this.createdCategories = createdCategories;
+        }
+
+        public Set<Category> getEnrolledCategories() {
+                return enrolledCategories;
+        }
+
+        public void setEnrolledCategories(Set<Category> enrolledCategories) {
+                this.enrolledCategories = enrolledCategories;
         }
 
         

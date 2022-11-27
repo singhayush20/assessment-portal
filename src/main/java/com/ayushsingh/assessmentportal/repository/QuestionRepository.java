@@ -10,5 +10,7 @@ import com.ayushsingh.assessmentportal.model.Quiz;
 public interface QuestionRepository extends JpaRepository<Question,Long>{
 
     Set<Question> findByQuiz(Quiz dtoToQuiz);
+
+    // List<Question> findByQuiz(Quiz quiz);
     
 }

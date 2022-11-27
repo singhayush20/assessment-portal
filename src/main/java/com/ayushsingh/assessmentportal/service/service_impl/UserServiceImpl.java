@@ -3,7 +3,7 @@ package com.ayushsingh.assessmentportal.service.service_impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.Set;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +11,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ayushsingh.assessmentportal.constants.AppConstants;
+import com.ayushsingh.assessmentportal.dto.CategoryDto;
 import com.ayushsingh.assessmentportal.dto.QuizDto;
 import com.ayushsingh.assessmentportal.dto.UserDto;
 import com.ayushsingh.assessmentportal.exceptions.DuplicateResourceException;
 import com.ayushsingh.assessmentportal.exceptions.NoAdminPermissionException;
 import com.ayushsingh.assessmentportal.exceptions.ResourceNotFoundException;
+import com.ayushsingh.assessmentportal.model.Category;
 import com.ayushsingh.assessmentportal.model.Quiz;
 import com.ayushsingh.assessmentportal.model.Role;
 import com.ayushsingh.assessmentportal.model.User;
+import com.ayushsingh.assessmentportal.repository.CategoryRepository;
 import com.ayushsingh.assessmentportal.repository.RoleRepository;
 import com.ayushsingh.assessmentportal.repository.UserRepository;
 import com.ayushsingh.assessmentportal.service.UserService;
@@ -29,6 +32,8 @@ public class UserServiceImpl implements UserService {
     private final String CLASS_NAME = UserServiceImpl.class.getName();
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    CategoryRepository categoryRepository;
 
     @Autowired
     RoleRepository roleRepository;
@@ -235,16 +240,46 @@ public class UserServiceImpl implements UserService {
         return quizzes;
     }
 
-    // @Override
-    // public List<QuizDto> getQuizzesByAdminAndCategory(Long adminId, Long categoryId){
-    //     User user=userRepository.findById(adminId).get();
-    //     List<Quiz> createdQuizzes=user.getCreatedQuizzes();
+   
 
-    // }
+    //add the user to a particular category
+    @Override
+    public void addEnrolledCategory(Long userid, Long categoryid) {
+        Optional<Category> category=this.categoryRepository.findById(categoryid);
+        if(category.isPresent()){
+            //Load user
+            User user=this.userRepository.findById(userid).get();
+            user.getEnrolledCategories().add(category.get());
+            //save the user
+            user=this.userRepository.save(user);
+        }
+        else{
+            throw new ResourceNotFoundException("Category", "category id", Long.toString(categoryid));
+        }
+    }
 
-    
+
+    //get all the categories in which the user is enrolled
+    @Override
+    public List<CategoryDto> getEnrolledCategories(Long userid) {
+        User user=this.userRepository.findById(userid).get();
+        Set<Category> enrolledCategories=user.getEnrolledCategories();
+        List<CategoryDto> eCategoryDtos=new ArrayList<>();
+        for(Category enCategory:enrolledCategories){
+            eCategoryDtos.add(this.categoryToDto(enCategory));
+        }
+        return eCategoryDtos;
+    }
+
+
+
     private QuizDto quizToDto(Quiz quiz){
         return this.modelMapper.map(quiz, QuizDto.class);
+    }
+
+    public CategoryDto categoryToDto(Category category) {
+        CategoryDto categoryDto = this.modelMapper.map(category, CategoryDto.class);
+        return categoryDto;
     }
     
 }

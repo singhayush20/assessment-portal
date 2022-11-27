@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ayushsingh.assessmentportal.constants.AppConstants;
 import com.ayushsingh.assessmentportal.dto.QuestionDto;
-import com.ayushsingh.assessmentportal.dto.QuizDto;
 import com.ayushsingh.assessmentportal.exceptions.ApiResponse;
 import com.ayushsingh.assessmentportal.exceptions.SuccessResponse;
 import com.ayushsingh.assessmentportal.service.QuestionService;
@@ -57,17 +56,18 @@ public class QuestionController {
     }
 
     @GetMapping("/quiz/{quizId}")
-    public ResponseEntity<SuccessResponse<List<QuestionDto>>> getQuestionsByQuiz(@PathVariable String quizId){
-       QuizDto quizDto=this.quizService.getQuizById(quizId);
+    public ResponseEntity<SuccessResponse<List<QuestionDto>>> getQuestionsByQuiz(@PathVariable Long quizId){
+    //    QuizDto quizDto=this.quizService.getQuizById(quizId);
         // Set<QuestionDto> questionDtos=this.questionService.getQuestionsOfQuiz(quizDto);
-        List<QuestionDto> questionDtos=quizDto.getQuestions();
-        List<QuestionDto> questionList=new ArrayList<>(questionDtos);
+        // List<QuestionDto> questionDtos=quizDto.getQuestions();
+        // List<QuestionDto> questionList=new ArrayList<>(questionDtos);
         //If the number of questions in the quiz is less than the number of questions in
         //the database
-        if(questionList.size()>Integer.parseInt(quizDto.getNumberOfQuestions())){
-            questionList.subList(0, Integer.parseInt(quizDto.getNumberOfQuestions()+1));
-        }
-        Collections.shuffle(questionList);//to randomize the order of questions
+        // if(questionList.size()>Integer.parseInt(quizDto.getNumberOfQuestions())){
+        //     questionList.subList(0, Integer.parseInt(quizDto.getNumberOfQuestions()+1));
+        // }
+        // Collections.shuffle(questionList);//to randomize the order of questions
+        List<QuestionDto> questionList=this.questionService.getQuestionsOfQuiz(quizId);
         SuccessResponse<List<QuestionDto>> successResponse=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,questionList);
         return new ResponseEntity<SuccessResponse<List<QuestionDto>>>(successResponse,HttpStatus.OK);
     }
