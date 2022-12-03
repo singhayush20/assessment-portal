@@ -86,6 +86,14 @@ public class QuestionServiceImpl implements QuestionService {
         
     }
 
+    
+
+    @Override
+    public QuestionDto getQuestionById(Long questionId) {
+       Question question=this.questionRepository.findById(questionId).get();
+       return this.questionToDto(question);
+    }
+
     QuestionDto questionToDto(Question question) {
         return this.modelMapper.map(question, QuestionDto.class);
     }
@@ -93,11 +101,4 @@ public class QuestionServiceImpl implements QuestionService {
     Question dtoToQuestion(QuestionDto questionDto) {
         return this.modelMapper.map(questionDto, Question.class);
     }
-
-    private Quiz dtoToQuiz(QuizDto quizDto) {
-        return this.modelMapper.map(quizDto, Quiz.class);
-    }
-
-  
-
 }
