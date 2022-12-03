@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ayushsingh.assessmentportal.dto.QuestionDto;
+import com.ayushsingh.assessmentportal.model.Question;
 
 public interface QuestionService {
     
@@ -18,4 +19,6 @@ public interface QuestionService {
     public List<QuestionDto> getQuestionsOfQuiz(Long quizId);
 
     public void deleteQuestion(String questionId);
+
+    public QuestionDto getQuestionById(Long questionId);
 }

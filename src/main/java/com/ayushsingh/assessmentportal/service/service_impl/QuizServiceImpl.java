@@ -128,4 +128,18 @@ public class QuizServiceImpl implements QuizService {
         UserDto userDto = this.modelMapper.map(user, UserDto.class);
         return userDto;
     }
+
+    @Override
+    public List<QuizDto> getActiveQuizzesByCategory(Long categoryId) {
+        Category category=new Category();
+        category.setCategoryId(categoryId);
+        List<Quiz> quizzes=this.quizRepository.findByCategoryAndActive(category,true);
+        List<QuizDto> quizzesDto=new ArrayList<>();
+        for(Quiz quiz: quizzes){
+            quizzesDto.add(this.quizToDto(quiz));
+        }
+        return quizzesDto;
+    }
+
+    
 }

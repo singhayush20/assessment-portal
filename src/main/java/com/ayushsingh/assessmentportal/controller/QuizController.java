@@ -79,4 +79,11 @@ public ResponseEntity<SuccessResponse<QuizDto>> getQuizById(@PathVariable(name="
         SuccessResponse<List<QuizDto>> successResponse=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,quizzes);
         return new ResponseEntity<SuccessResponse<List<QuizDto>>>(successResponse,HttpStatus.OK);
     }
+    
+    @GetMapping("/active")
+    public ResponseEntity<SuccessResponse<List<QuizDto>>> getQuizzesForAdminByCategory(@RequestParam("categoryId") Long categoryId){
+        List<QuizDto> quizzes=this.quizService.getActiveQuizzesByCategory(categoryId);
+         SuccessResponse<List<QuizDto>> successResponse=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,quizzes);
+         return new ResponseEntity<SuccessResponse<List<QuizDto>>>(successResponse,HttpStatus.OK);
+     }
 }

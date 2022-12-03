@@ -15,4 +15,6 @@ public interface QuizService {
     public QuizDto getQuizById(String quizId);
 
     public void deleteQuiz(String quizId);
+
+    public List<QuizDto> getActiveQuizzesByCategory(Long categoryId);
 }
