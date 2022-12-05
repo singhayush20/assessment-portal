@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ayushsingh.assessmentportal.constants.AppConstants;
@@ -73,24 +74,28 @@ public class QuestionController {
 
     // evaluate quiz on server
     @PostMapping("/evaluate-quiz")
-    public ResponseEntity<?> evalQuiz(@RequestBody List<QuestionDto> questions) {
+    public ResponseEntity<?> evalQuiz(@RequestBody Map<Long, String> questions,
+            @RequestParam(name = "quizId") Long quizId, @RequestParam(name = "maxMarks") Long maxMarks,
+            @RequestParam(name = "userId") Long userId) {
 
         int marksObtained = 0;
         int correctAnswers = 0;
         int attempted = 0;
-        for (QuestionDto q : questions) {
-            QuestionDto question = this.questionService.getQuestionById(q.getQuestionId());
-            if (question.getAnswer().trim().equals(q.getSubmittedAnswer())) {
+        for (Map.Entry<Long, String> entry : questions.entrySet()) {
+            QuestionDto question = this.questionService.getQuestionById(entry.getKey());
+            if (question.getAnswer().trim().equals(entry.getValue())) {
                 // increase the number of correct answers
                 correctAnswers++;
-                double marksSingle = Double.parseDouble(questions.get(0).getQuiz().getMaxMarks())/questions.size();
-            } else if (q.getSubmittedAnswer() != null || !q.getSubmittedAnswer().trim().equals("")) {
+                double marksSingle = maxMarks / questions.size();
+            } else if (entry.getValue() != null || !entry.getValue().trim().equals("")) {
                 attempted++;
             }
         }
-        Map<String,Integer> result=Map.of("marks obtained",marksObtained,"correct answers",correctAnswers,"attempted",attempted);
-        SuccessResponse<Map<String,Integer>> successResponse=new SuccessResponse<Map<String,Integer>>(AppConstants.SUCCESS_CODE, AppConstants.SUCCESS_MESSAGE, result);
-        return new ResponseEntity<SuccessResponse<Map<String,Integer>>>(successResponse,HttpStatus.OK);
+        Map<String, Integer> result = Map.of("marks obtained", marksObtained, "correct answers", correctAnswers,
+                "attempted", attempted);
+        SuccessResponse<Map<String, Integer>> successResponse = new SuccessResponse<Map<String, Integer>>(
+                AppConstants.SUCCESS_CODE, AppConstants.SUCCESS_MESSAGE, result);
+        return new ResponseEntity<SuccessResponse<Map<String, Integer>>>(successResponse, HttpStatus.OK);
     }
 
 }

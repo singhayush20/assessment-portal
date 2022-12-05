@@ -20,6 +20,8 @@ public class QuizDto {
     private String numberOfQuestions;
     @NotBlank(message = "Active field cannot be empty")
     private boolean active=false;
+    @NotBlank(message="Time cannot be empty")
+    private int time;
     private CategoryDto category;
     @JsonIgnore
     private List<QuestionDto> questions=new ArrayList<>();
@@ -80,6 +82,12 @@ public class QuizDto {
     public void setAdminUser(UserDto adminUser) {
         this.adminUser = adminUser;
     }
-
+    public int getTime() {
+        return time;
+    }
+    public void setTime(int time) {
+        this.time = time;
+    }
+    
 
 }

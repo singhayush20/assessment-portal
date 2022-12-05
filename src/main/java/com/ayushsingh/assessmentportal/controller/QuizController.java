@@ -2,6 +2,7 @@ package com.ayushsingh.assessmentportal.controller;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public class QuizController {
 
     @PostMapping("/create")
     public ResponseEntity<SuccessResponse<QuizDto>> create(@RequestBody QuizDto quizDto,@RequestParam("userid") Long userid){
-        System.out.println("QuizController: Creating quiz: "+quizDto+" userid: "+userid);
+        System.out.println("QuizController: Creating quiz: "+quizDto+" userid: "+userid+" time: "+quizDto.getTime());
         quizDto=this.quizService.addQuiz(quizDto,userid);
         SuccessResponse<QuizDto> successResponse=new SuccessResponse<>(AppConstants.SUCCESS_CODE,AppConstants.SUCCESS_MESSAGE,quizDto);
         return new ResponseEntity<SuccessResponse<QuizDto>>(successResponse,HttpStatus.OK);

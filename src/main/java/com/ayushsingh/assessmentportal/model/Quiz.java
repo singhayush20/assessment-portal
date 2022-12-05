@@ -16,8 +16,6 @@ import javax.persistence.PreRemove;
 import javax.persistence.Table;
 
 
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Table(name="quiz")
@@ -40,7 +38,10 @@ public class Quiz {
    private boolean active=false;
     @ManyToOne(fetch = FetchType.EAGER)
    private Category category;
+   @Column(name="time",nullable = false)
+   private int time;
 
+  
    @OneToMany(mappedBy = "quiz",fetch = FetchType.LAZY/*Data is obtained when getter is called */,cascade = CascadeType.ALL)
 //    @JsonIgnore //use json igone so that we do not fetch questions 
    private List<Question> questions=new ArrayList<>();
@@ -107,6 +108,11 @@ public class Quiz {
    public void setAdminUser(User adminUser) {
       this.adminUser = adminUser;
    }
-
+   public int getTime() {
+      return time;
+   }
+   public void setTime(int time) {
+      this.time = time;
+   }
    
 }

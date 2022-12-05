@@ -100,6 +100,7 @@ public class QuizServiceImpl implements QuizService {
         oldQuiz.setMaxMarks(quiz.getMaxMarks());
         oldQuiz.setNumberOfQuestions(quiz.getNumberOfQuestions());
         oldQuiz.setTitle(quiz.getTitle());
+        oldQuiz.setTime(quiz.getTime());
       Quiz updatedQuiz=this.quizRepository.save(oldQuiz);//either save new or update existing
       return this.quizToDto(updatedQuiz);
     }
@@ -108,17 +109,7 @@ public class QuizServiceImpl implements QuizService {
     private QuizDto quizToDto(Quiz quiz){
         return this.modelMapper.map(quiz, QuizDto.class);
         
-        // QuizDto quizDto=new QuizDto();
-        // quizDto.setActive(quiz.isActive());
-        // quizDto.setAdminUser(this.usertoDto(quiz.getAdminUser()));
-        // // quizDto.setCategory(this.categoryToDto(quiz.getCategory()));
-        // quizDto.setDescription(quiz.getDescription());
-        // quizDto.setMaxMarks(quiz.getMaxMarks());
-        // quizDto.setNumberOfQuestions(quiz.getNumberOfQuestions());
-        // // quizDto.setQuestions(quiz.getQuestions());
-        // quizDto.setQuizId(quiz.getQuizId());
-        // quizDto.setTitle(quiz.getTitle());
-        // return quizDto;
+      
 
     }
     private Quiz dtoToQuiz(QuizDto quizDto){
