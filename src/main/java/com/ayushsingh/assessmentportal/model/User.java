@@ -56,8 +56,7 @@ public class User implements UserDetails /*
 
         @ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
                         CascadeType.REFRESH }/* Save role when user is saved */, fetch = FetchType.EAGER) // each user
-                                                                                                          // can have
-                                                                                                          // many roles
+                                                                                                          // can have                                                                                              // many roles
         @JoinTable(name = "user_role", // the name of the table which manages this relationship
                         // specify the join columns in that table
                         joinColumns = @JoinColumn(
@@ -137,13 +136,9 @@ public class User implements UserDetails /*
                                 referencedColumnName = "category_id"))
         Set<Category> enrolledCategories=new HashSet<>();
 
-        /*
-         * Spring Security: UserDetails methods
-         * These methods are used by Spring Security
-         */
-
-        // This method will be called to get the list of authorities
-        // the user has
+        //To store the quizzes attempted by user
+       @OneToMany(mappedBy="user",fetch = FetchType.LAZY)
+      private  List<QuizHistory> quizHistory;
  
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -305,6 +300,16 @@ public class User implements UserDetails /*
         public void setEnrolledCategories(Set<Category> enrolledCategories) {
                 this.enrolledCategories = enrolledCategories;
         }
+
+        public List<QuizHistory> getQuizHistory() {
+                return quizHistory;
+        }
+
+        public void setQuizHistory(List<QuizHistory> quizHistory) {
+                this.quizHistory = quizHistory;
+        }
+
+        
 
         
 

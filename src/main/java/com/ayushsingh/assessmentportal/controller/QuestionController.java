@@ -32,6 +32,8 @@ public class QuestionController {
     @Autowired
     QuizService quizService;
 
+    
+
     @PostMapping("/create")
     public ResponseEntity<SuccessResponse<QuestionDto>> createCategory(@RequestBody QuestionDto questionDto) {
         questionDto = this.questionService.addQuestion(questionDto);
@@ -81,16 +83,20 @@ public class QuestionController {
         int marksObtained = 0;
         int correctAnswers = 0;
         int attempted = 0;
+        double marksSingle = maxMarks / questions.size();
         for (Map.Entry<Long, String> entry : questions.entrySet()) {
             QuestionDto question = this.questionService.getQuestionById(entry.getKey());
             if (question.getAnswer().trim().equals(entry.getValue())) {
                 // increase the number of correct answers
                 correctAnswers++;
-                double marksSingle = maxMarks / questions.size();
-            } else if (entry.getValue() != null || !entry.getValue().trim().equals("")) {
                 attempted++;
-            }
+               marksObtained+=marksSingle;
         }
+            else if (entry.getValue() != null || !entry.getValue().trim().equals("")) {
+            attempted++;
+        }
+          
+    }
         Map<String, Integer> result = Map.of("marks obtained", marksObtained, "correct answers", correctAnswers,
                 "attempted", attempted);
         SuccessResponse<Map<String, Integer>> successResponse = new SuccessResponse<Map<String, Integer>>(
@@ -98,4 +104,6 @@ public class QuestionController {
         return new ResponseEntity<SuccessResponse<Map<String, Integer>>>(successResponse, HttpStatus.OK);
     }
 
+
+   
 }

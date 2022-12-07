@@ -2,6 +2,7 @@ package com.ayushsingh.assessmentportal.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -45,8 +46,14 @@ public class Quiz {
    @OneToMany(mappedBy = "quiz",fetch = FetchType.LAZY/*Data is obtained when getter is called */,cascade = CascadeType.ALL)
 //    @JsonIgnore //use json igone so that we do not fetch questions 
    private List<Question> questions=new ArrayList<>();
+
    @ManyToOne(fetch = FetchType.EAGER)
    private User adminUser;
+
+   //To store the users who attempted the quiz
+   @OneToMany(mappedBy = "quiz",fetch = FetchType.LAZY)
+   private List<QuizHistory> quizHistory;
+
    @PreRemove
    public void removeCategory(){
       System.out.println("Quiz: removing category for quizId: "+quizId);
@@ -114,5 +121,13 @@ public class Quiz {
    public void setTime(int time) {
       this.time = time;
    }
+   public List<QuizHistory> getQuizHistory() {
+      return quizHistory;
+   }
+   public void setQuizHistory(List<QuizHistory> quizHistory) {
+      this.quizHistory = quizHistory;
+   }
+ 
+   
    
 }
