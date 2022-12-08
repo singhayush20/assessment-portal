@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ayushsingh.assessmentportal.constants.AppConstants;
 import com.ayushsingh.assessmentportal.dto.QuizHistoryDto;
+import com.ayushsingh.assessmentportal.exceptions.ApiResponse;
 import com.ayushsingh.assessmentportal.exceptions.SuccessResponse;
 import com.ayushsingh.assessmentportal.service.QuizHistoryService;
 
@@ -47,5 +48,12 @@ public class QuizHistoryController {
         SuccessResponse<List<QuizHistoryDto>> successResponse = new SuccessResponse<>(AppConstants.SUCCESS_CODE,
                 AppConstants.SUCCESS_MESSAGE, quizzes);
         return new ResponseEntity<>(successResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/check-attempt")
+    public ResponseEntity<?> checkIfQuizIsAttempted(@RequestParam(name="quizId") Long quizId, @RequestParam(name="userId") Long userId){
+        boolean result=this.quizHistoryService.checkIfQuizIsAttempted(quizId, userId);
+        ApiResponse successResponse=new ApiResponse(AppConstants.SUCCESS_CODE, AppConstants.SUCCESS_MESSAGE, Boolean.toString(result));
+        return new ResponseEntity<ApiResponse>(successResponse, HttpStatus.OK);
     }
 }

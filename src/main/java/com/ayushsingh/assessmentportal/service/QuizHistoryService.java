@@ -8,4 +8,5 @@ public interface QuizHistoryService {
     List<QuizHistoryDto> getQuizzesByUserId(Long userId);
     List<QuizHistoryDto> getAllUsersForQuiz(Long quizId);
     QuizHistoryDto saveNewRecord(QuizHistoryDto newRecord,Long userid,Long quizid);
+    boolean checkIfQuizIsAttempted(Long quizId, Long userId);
 }

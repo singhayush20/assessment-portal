@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ayushsingh.assessmentportal.constants.AppConstants;
 import com.ayushsingh.assessmentportal.dto.QuestionDto;
+import com.ayushsingh.assessmentportal.dto.QuizHistoryDto;
 import com.ayushsingh.assessmentportal.exceptions.ApiResponse;
 import com.ayushsingh.assessmentportal.exceptions.SuccessResponse;
 import com.ayushsingh.assessmentportal.service.QuestionService;
+import com.ayushsingh.assessmentportal.service.QuizHistoryService;
 import com.ayushsingh.assessmentportal.service.QuizService;
 
 @RestController
@@ -32,6 +34,8 @@ public class QuestionController {
     @Autowired
     QuizService quizService;
 
+    @Autowired
+    QuizHistoryService quizHistoryService;
     
 
     @PostMapping("/create")
@@ -76,7 +80,7 @@ public class QuestionController {
 
     // evaluate quiz on server
     @PostMapping("/evaluate-quiz")
-    public ResponseEntity<?> evalQuiz(@RequestBody Map<Long, String> questions,
+    public ResponseEntity<SuccessResponse<QuizHistoryDto>> evalQuiz(@RequestBody Map<Long, String> questions,
             @RequestParam(name = "quizId") Long quizId, @RequestParam(name = "maxMarks") Long maxMarks,
             @RequestParam(name = "userId") Long userId) {
 
@@ -97,11 +101,20 @@ public class QuestionController {
         }
           
     }
-        Map<String, Integer> result = Map.of("marks obtained", marksObtained, "correct answers", correctAnswers,
-                "attempted", attempted);
-        SuccessResponse<Map<String, Integer>> successResponse = new SuccessResponse<Map<String, Integer>>(
-                AppConstants.SUCCESS_CODE, AppConstants.SUCCESS_MESSAGE, result);
-        return new ResponseEntity<SuccessResponse<Map<String, Integer>>>(successResponse, HttpStatus.OK);
+    //Save the record to database
+    QuizHistoryDto newRecord=new QuizHistoryDto();
+    newRecord.setMarksObtained(marksObtained);
+    newRecord.setMaxMarks(Integer.parseInt(Long.toString(maxMarks)));
+    newRecord.setCorrectQuestions(correctAnswers);
+    newRecord.setQuestionsAttempted(attempted);
+    newRecord.setNoOfQuestions(questions.size());
+        QuizHistoryDto quizHistoryDto=this.quizHistoryService.saveNewRecord(newRecord, userId, quizId);
+
+        // Map<String, Integer> result = Map.of("marks obtained", marksObtained, "correct answers", correctAnswers,
+        //         "attempted", attempted);
+        SuccessResponse<QuizHistoryDto> successResponse = new SuccessResponse<>(
+                AppConstants.SUCCESS_CODE, AppConstants.SUCCESS_MESSAGE, quizHistoryDto);
+        return new ResponseEntity<>(successResponse, HttpStatus.OK);
     }
 
 

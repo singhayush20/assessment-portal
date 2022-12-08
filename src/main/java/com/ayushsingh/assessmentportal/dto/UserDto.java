@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 // @Data
 public class UserDto {
@@ -62,11 +63,9 @@ public class UserDto {
     public void setUser_name(String user_name) {
         this.user_name = user_name;
     }
-
     public String getPassword() {
         return password;
     }
-
     public void setPassword(String password) {
         this.password = password;
     }

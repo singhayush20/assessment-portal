@@ -39,6 +39,7 @@ public class QuizHistoryServiceImpl implements QuizHistoryService {
         System.out.println("find by user id: Number of history entries found: " + histories.size());
         List<QuizHistoryDto> quizHistoryDtos = new ArrayList<>();
         for (QuizHistory quizHistory : histories) {
+            quizHistory.setUser(null);//do not send user data
             quizHistoryDtos.add(this.quizHistoryToDto(quizHistory));
         }
         return quizHistoryDtos;
@@ -50,6 +51,7 @@ public class QuizHistoryServiceImpl implements QuizHistoryService {
         System.out.println("find by quiz id: Number of history entries found: " + histories.size());
         List<QuizHistoryDto> quizHistoryDtos = new ArrayList<>();
         for (QuizHistory quizHistory : histories) {
+            quizHistory.setQuiz(null);//do not send quiz data
             quizHistoryDtos.add(this.quizHistoryToDto(quizHistory));
         }
         return quizHistoryDtos;
@@ -76,6 +78,22 @@ public class QuizHistoryServiceImpl implements QuizHistoryService {
         }
 
         return this.quizHistoryToDto(quizHistory);
+    }
+
+    
+
+
+
+    @Override
+    public boolean checkIfQuizIsAttempted(Long quizId, Long userId) {
+        QuizHistoryKey quizHistoryKey=new QuizHistoryKey();
+        quizHistoryKey.setQuizId(quizId);
+        quizHistoryKey.setUserId(userId);
+        Optional<QuizHistory> optional=this.quizHistoryRepository.findById(quizHistoryKey);
+        if(optional.isEmpty()){
+            return false;
+        }
+        return true;
     }
 
     private QuizHistory dtoToQuizHistory(QuizHistoryDto quizHistoryDto) {

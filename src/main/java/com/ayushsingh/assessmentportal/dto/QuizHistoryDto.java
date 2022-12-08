@@ -1,14 +1,13 @@
 package com.ayushsingh.assessmentportal.dto;
 
 import com.ayushsingh.assessmentportal.model.QuizHistoryKey;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class QuizHistoryDto {
     private QuizHistoryKey id;
 
    
-    private UserDto user;
+    private UserDto2 user;
 
     private QuizDto quiz;
 
@@ -29,15 +28,13 @@ public class QuizHistoryDto {
     public void setId(QuizHistoryKey id) {
         this.id = id;
     }
-    // @JsonIgnore
-    public UserDto getUser() {
+    public UserDto2 getUser() {
         return user;
     }
     @JsonProperty("user")
-    public void setUser(UserDto user) {
+    public void setUser(UserDto2 user) {
         this.user = user;
     }
-    // @JsonIgnore
     public QuizDto getQuiz() {
         return quiz;
     }
