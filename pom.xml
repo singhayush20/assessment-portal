@@ -106,8 +106,11 @@
 			<artifactId>guava</artifactId>
 			<version>31.1-jre</version>
 		</dependency>
-		
-		
+		 <!-- Spring Boot Actuator -->
+		 <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		  </dependency>
 
 		
 		
