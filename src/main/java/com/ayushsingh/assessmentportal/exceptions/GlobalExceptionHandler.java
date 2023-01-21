@@ -60,7 +60,8 @@ public class GlobalExceptionHandler {
         String status=ex.getStatus();
         errors.put(fieldName, error);
         errors.put("status",status);
-        return new ResponseEntity<Map<String, String>>(errors, HttpStatus.BAD_REQUEST);
+        errors.put("code",AppConstants.FAILURE_CODE);
+        return new ResponseEntity<Map<String, String>>(errors, HttpStatus.OK);
     }
 
     
