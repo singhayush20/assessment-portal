@@ -14,7 +14,7 @@
 	<name>assessment-portal</name>
 	<description>Assessment Portal using Spring Boot (Backend)</description>
 	<properties>
-		<java.version>16</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 
