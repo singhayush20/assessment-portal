@@ -54,14 +54,15 @@
 		</dependency>
 		<!-- 6. My Sql connector -->
 		<!-- <dependency>
-			<groupId>com.mysql</groupId>
-			<artifactId>mysql-connector-j</artifactId>
-			<scope>runtime</scope>
-		</dependency> -->
-		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
+		</dependency> -->
+		<!-- MSSQL for production-->
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<version>12.2.0.jre11</version>
 		</dependency>
 		<!-- 7. Lombok -->
 		<dependency>
@@ -111,17 +112,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		  </dependency>
-
-		
-		
-		<!-- For Java version>8 also include javax.xm.bind with spring security and jwt-->
-		<!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
-		<!-- <dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-			<version>2.3.1</version>
-		</dependency> -->
-		
 	</dependencies>
 
 	<build>
