@@ -175,13 +175,10 @@ public class User implements UserDetails /*
                 // if the enabled is set to false
                 // return false
                 // this will disable account
-                System.out.println("is enabled: "+enabled);
                 //check if enabled is null or not- NullPointerException on __toDto conversion
                 if (this.enabled!=null&&this.enabled.equalsIgnoreCase(enabled)) {
-                        System.out.println(User.class.getName()+" User is enabled");
                         return true;
                 } else {
-                        System.out.println(User.class.getName()+" User is disabled");
 
                         return false;
                 }

@@ -9,15 +9,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.ayushsingh.assessmentportal.constants.AppConstants;
+import com.ayushsingh.assessmentportal.exceptions.InvalidTokenInHeaderException;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
 @Component
 public class JwtUtil {
 
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        String subject = extractClaim(token, Claims::getSubject);
+        System.out.println("Extracted subject: " + subject);
+        return subject;
     }
 
     public Date extractExpiration(String token) {
@@ -28,8 +32,20 @@ public class JwtUtil {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
+
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(AppConstants.SECRET_KEY).parseClaimsJws(token).getBody();
+        /*
+         * The parseClaimsJws() method throws following exceptions-
+         * ExpiredJwtException,
+         * UnsupportedJwtException,
+         * MalformedJwtException,
+         * SignatureException,
+         * IllegalArgumentException
+         * If the token is expired, ExpiredJwtException will be thrown
+         */
+        Claims parsedClaims = Jwts.parser().setSigningKey(AppConstants.SECRET_KEY).parseClaimsJws(token).getBody();
+        System.out.println("Parsed Claims: " + parsedClaims.getSubject());
+        return parsedClaims;
     }
 
     private Boolean isTokenExpired(String token) {
@@ -42,23 +58,39 @@ public class JwtUtil {
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
-
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+        Date issueDate = new Date(System.currentTimeMillis());
+        System.out.println("issueDate: " + issueDate + " time: " + issueDate.getTime() + " issueDate formatted: "
+                + issueDate.toString());
+        Date expirationDate = new Date(System.currentTimeMillis() + 1000 * 60 /** 60 * 10 */
+        );
+        System.out.println("Expiration date: " + expirationDate + " formatted: " + expirationDate.toString());
+        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(issueDate)
+                .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS256, AppConstants.SECRET_KEY).compact();
     }
 
-    //new
-    // public String doGenerateRefreshToken(Map<String, Object> claims, String subject) {
+    // new
+    // public String doGenerateRefreshToken(Map<String, Object> claims, String
+    // subject) {
 
-	// 	return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-	// 			.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-	// 			.signWith(SignatureAlgorithm.HS512, AppConstants.SECRET_KEY).compact();
+    // return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new
+    // Date(System.currentTimeMillis()))
+    // .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+    // .signWith(SignatureAlgorithm.HS512, AppConstants.SECRET_KEY).compact();
 
-	// }
+    // }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        boolean isUsernameValid = username.equals(userDetails.getUsername());
+        boolean isJwtTtokenExpired = isTokenExpired(token);
+        System.out.println("Is token expired: " + isJwtTtokenExpired + " is username valid: " + isUsernameValid);
+        if (isUsernameValid == false) {
+            throw new InvalidTokenInHeaderException("Username in the token is invalid");
+        }
+        if (isJwtTtokenExpired == true) {
+            throw new InvalidTokenInHeaderException("Token is expired!");
+        }
+        return (isUsernameValid && !isJwtTtokenExpired);
     }
 }

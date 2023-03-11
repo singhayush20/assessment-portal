@@ -1,6 +1,7 @@
 package com.ayushsingh.assessmentportal.configs;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import com.ayushsingh.assessmentportal.service.service_impl.UserDetailsServiceImpl;
 @Configuration//this tells that this a configuration class
@@ -29,6 +31,10 @@ public class SecurityConfig {
    
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Autowired
+    @Qualifier("handlerExceptionResolver")
+    private HandlerExceptionResolver exceptionResolver;
     
     private final String [] PUBLIC_URLS={
         "/assessmentportal/authenticate/**",
@@ -55,8 +61,6 @@ public class SecurityConfig {
         .and()
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);//make the session creation policy stateless
-
-
         //add a filter which checks the token
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

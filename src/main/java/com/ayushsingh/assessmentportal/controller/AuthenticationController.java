@@ -44,39 +44,13 @@ public class AuthenticationController {
     @Autowired
     private UserService userService;
 
-    // private void authenticate(String username, String password) throws Exception
-    // {
-    // try {
-    // authenticationManager.authenticate(new
-    // UsernamePasswordAuthenticationToken(username, password));
-
-    // } catch (DisabledException e) {
-    // throw new Exception("USER DISABLED: " + e.getMessage());
-
-    // } catch (BadCredentialsException e) {
-    // throw new Exception("Invalid Credentials " + e.getMessage());
-    // }
-    // catch(AuthenticationException e){
-    // throw new
-    // }
-    // }
-
     // generate token
     @PostMapping("/login")
     public ResponseEntity<?> generateToken(@RequestBody JwtRequest jwtRequest) throws Exception {
         try {
-            // authenticate(jwtRequest.getUsername(), jwtRequest.getPassword());
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword()));
-        // } catch (UsernameNotFoundException e) {
-            // e.printStackTrace();
-        //     throw new Exception("user not found");
-        // } catch (DisabledException e) {
-        //     throw new Exception("USER DISABLED: " + e.getMessage());
-
-        // } catch (BadCredentialsException e) {
-        //     throw new Exception("Invalid Credentials " + e.getMessage());
-        // }
+        
         }
         catch(BadCredentialsException ex){
             throw new JWTAuthenticationException(AppConstants.FAILURE_MESSAGE,ex.getMessage());
@@ -113,27 +87,4 @@ public class AuthenticationController {
                 user);
         return new ResponseEntity<SuccessResponse<User>>(response, HttpStatus.OK);
     }
-
-    // //new
-    // @RequestMapping(value = "/refreshtoken", method = RequestMethod.GET)
-    // public ResponseEntity<?> refreshtoken(HttpServletRequest request) throws
-    // Exception {
-    // // From the HttpRequest get the claims
-    // DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims)
-    // request.getAttribute("claims");
-
-    // Map<String, Object> expectedMap = getMapFromIoJsonwebtokenClaims(claims);
-    // String token = jwtUtil.doGenerateRefreshToken(expectedMap,
-    // expectedMap.get("sub").toString());
-    // return ResponseEntity.ok(new JwtResponse(token));
-    // }
-    // //new
-    // public Map<String, Object> getMapFromIoJsonwebtokenClaims(DefaultClaims
-    // claims) {
-    // Map<String, Object> expectedMap = new HashMap<String, Object>();
-    // for (Entry<String, Object> entry : claims.entrySet()) {
-    // expectedMap.put(entry.getKey(), entry.getValue());
-    // }
-    // return expectedMap;
-    // }
 }
