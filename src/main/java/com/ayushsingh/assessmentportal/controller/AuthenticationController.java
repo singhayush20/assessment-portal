@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,11 +48,17 @@ public class AuthenticationController {
 
     // generate token
     @PostMapping("/login")
-    public ResponseEntity<?> generateToken(@RequestBody JwtRequest jwtRequest) throws Exception {
+    public ResponseEntity<?> generateToken(@RequestBody JwtRequest jwtRequest)  {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword()));
         
+        }
+        catch(DisabledException ex){
+            throw new JWTAuthenticationException(AppConstants.FAILURE_MESSAGE,ex.getMessage());
+        }
+        catch(LockedException ex){
+            throw new JWTAuthenticationException(AppConstants.FAILURE_MESSAGE,ex.getMessage());
         }
         catch(BadCredentialsException ex){
             throw new JWTAuthenticationException(AppConstants.FAILURE_MESSAGE,ex.getMessage());

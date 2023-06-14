@@ -117,7 +117,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (InvalidTokenInHeaderException e) {
             exceptionResolver.resolveException(request, response, null, e);
         }
-
     }
 
 }

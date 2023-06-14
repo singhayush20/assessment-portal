@@ -52,18 +52,18 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
-		<!-- 6. My Sql connector -->
-		<dependency>
+		<!-- 6. My Sql connector for dev -->
+		<!-- <dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
-		</dependency>
+		</dependency> -->
 		<!-- MSSQL for production-->
-		<!-- <dependency>
+		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>mssql-jdbc</artifactId>
 			<version>12.2.0.jre11</version>
-		</dependency> -->
+		</dependency>
 		<!-- 7. Lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
