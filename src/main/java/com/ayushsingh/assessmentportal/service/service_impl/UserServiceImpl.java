@@ -1,15 +1,5 @@
 package com.ayushsingh.assessmentportal.service.service_impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import com.ayushsingh.assessmentportal.constants.AppConstants;
 import com.ayushsingh.assessmentportal.dto.CategoryDto;
 import com.ayushsingh.assessmentportal.dto.QuizDto;
@@ -25,6 +15,15 @@ import com.ayushsingh.assessmentportal.repository.CategoryRepository;
 import com.ayushsingh.assessmentportal.repository.RoleRepository;
 import com.ayushsingh.assessmentportal.repository.UserRepository;
 import com.ayushsingh.assessmentportal.service.UserService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -44,40 +43,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // create user
-    @Override
-    public UserDto createUser(UserDto userDto) {
-
-        // check if an user already exists
-        User user = this.dtoToUser(userDto);
-        List<User> local = this.userRepository.findByEmail(user.getEmail());
-        if (local != null&&local.size()!=0) {
-            // i.e., the user with this username is already present
-            System.out.println(CLASS_NAME + " is user present: " + local.toString());
-
-            System.out.println("User already exists");
-            // throw an exception which will be handled by any
-            // method which invokes this method
-            throw new DuplicateResourceException("User", "username", user.getUser_name());
-        } else {
-            System.out.println(CLASS_NAME + " user not present with these details");
-            try {
-                Role role = this.roleRepository.findById(AppConstants.NORMAL_ROLE_ID).get();
-                user.getRoles().add(role);
-                // save the users and the user roles will
-                // be saved automatically because of CacadeType.ALL
-                // on the UserRoles entities
-                user = this.userRepository.save(user);
-            } catch (Exception e) {
-                throw e;
-            }
-            // create user
-
-        }
-        return this.usertoDto(user);
-    }
-
-
 
     @Override
     public void deleteUserbyId(String id) {
@@ -93,25 +58,18 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
-    public UserDto findByUsername(String username) {
-        User user = userRepository.findByUser_name(username);
-        if (user == null) {
-            throw new ResourceNotFoundException("User", "username", username);
-        }
-        return this.usertoDto(user);
-    }
 
     @Override
     public UserDto findByEmail(String email) {
-        System.out.println("UserServiceImpl: Loading user for email: "+email);
+        System.out.println("UserServiceImpl: Loading user for email: " + email);
         List<User> userList = userRepository.findByEmail(email);
-        System.out.println("findByEmail: userList: "+userList);
-        if (userList == null||userList.size()==0) {
+        System.out.println("findByEmail: userList: " + userList);
+        if (userList == null || userList.size() == 0) {
             throw new ResourceNotFoundException("User", "email", email);
         }
         return this.usertoDto(userList.get(0));
     }
+
     private User dtoToUser(UserDto userDto) {
         return this.modelMapper.map(userDto, User.class);
     }
@@ -136,7 +94,6 @@ public class UserServiceImpl implements UserService {
             oldUser.setEmail(newUser.getEmail());
             oldUser.setFirstName(newUser.getFirstName());
             oldUser.setLastName(newUser.getLastName());
-            // oldUser.setPassword(newUser.getPassword());
             oldUser.setPhone(newUser.getPhone());
             oldUser.setEnabled(newUser.getEnabled());
             oldUser.setProfile(newUser.getProfile());
@@ -156,7 +113,7 @@ public class UserServiceImpl implements UserService {
         User user = this.modelMapper.map(userDto, User.class);
         List<User> local = this.userRepository.findByEmail(user.getEmail());
         User newUser = null;
-        if (local.size()==0) {
+        if (local.size() == 0) {
             // encode the password
             user.setPassword(this.passwordEncoder.encode(user.getPassword()));
 
@@ -165,19 +122,19 @@ public class UserServiceImpl implements UserService {
             Role role = this.roleRepository.findById(AppConstants.NORMAL_ROLE_ID).get();
             user.getRoles().add(role);
             newUser = this.userRepository.save(user);
-        }
-        else{
-             // i.e., the user with this username is already present
-             System.out.println(CLASS_NAME + " is user present: " + local.toString());
+        } else {
+            // i.e., the user with this username is already present
+            System.out.println(CLASS_NAME + " is user present: " + local);
 
-             System.out.println("User already exists");
-             // throw an exception which will be handled by any
-             // method which invokes this method
-             throw new DuplicateResourceException("User", "username", user.getEmail());
+            System.out.println("User already exists");
+            // throw an exception which will be handled by any
+            // method which invokes this method
+            throw new DuplicateResourceException("User", "username", user.getEmail());
         }
 
         return this.usertoDto(newUser);
     }
+
     //To get the complete details of the user including authentication
     @Override
     public User getUserByUsername(String username) {
@@ -190,16 +147,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto registerAdminUser(UserDto userDto, String key) {
-        System.out.println("UserDto username: "+userDto.getUser_name());
-        if(key.equals(AppConstants.ADMIN_KEY)){
+        System.out.println("UserDto username: " + userDto.getUser_name());
+        if (key.equals(AppConstants.ADMIN_KEY)) {
             throw new NoAdminPermissionException("Admin Key required");
 
         }
         User user = this.modelMapper.map(userDto, User.class);
-        System.out.println("Saving user with username: "+user.getUser_name());
+        System.out.println("Saving user with username: " + user.getUser_name());
         List<User> local = this.userRepository.findByEmail(user.getEmail());
         User newUser = null;
-        if (local.size()==0) {
+        if (local.size() == 0) {
             // encode the password
             user.setPassword(this.passwordEncoder.encode(user.getPassword()));
 
@@ -208,31 +165,30 @@ public class UserServiceImpl implements UserService {
             Role role = this.roleRepository.findById(AppConstants.ADMIN_ROLE_ID).get();
             user.getRoles().add(role);
             newUser = this.userRepository.save(user);
-        }
-        else{
-             // i.e., the user with this username is already present
-             System.out.println(CLASS_NAME + " is user present: " + local.toString());
+        } else {
+            // i.e., the user with this username is already present
+            System.out.println(CLASS_NAME + " is user present: " + local);
 
-             System.out.println("User already exists");
-             // throw an exception which will be handled by any
-             // method which invokes this method
-             throw new DuplicateResourceException("User", "username", user.getUser_name());
+            System.out.println("User already exists");
+            // throw an exception which will be handled by any
+            // method which invokes this method
+            throw new DuplicateResourceException("User", "username", user.getUser_name());
         }
 
         return this.usertoDto(newUser);
     }
 
     @Override
-    public List<QuizDto> getQuizzesByAdminAndCategory(Long adminid,Long categoryId) {
-        User user=userRepository.findById(adminid).get();
-        System.out.println("category id: "+categoryId+" userid: "+adminid);
-        List<Quiz> createdQuizzes=user.getCreatedQuizzes();
-        System.out.println("Number of quizzes: "+createdQuizzes.size());
-        List<QuizDto> quizzes=new ArrayList<>();
-        for(Quiz quiz: createdQuizzes){
-            System.out.println("Quiz: quiz id: "+quiz.getQuizId()+" categoryId: "+quiz.getCategory().getCategoryId());
-            if(quiz.getCategory().getCategoryId().equals(categoryId)){
-                System.out.println("adding Quiz: quiz id: "+quiz.getQuizId()+" categoryId: "+quiz.getCategory().getCategoryId());
+    public List<QuizDto> getQuizzesByAdminAndCategory(Long adminid, Long categoryId) {
+        User user = userRepository.findById(adminid).get();
+        System.out.println("category id: " + categoryId + " userid: " + adminid);
+        List<Quiz> createdQuizzes = user.getCreatedQuizzes();
+        System.out.println("Number of quizzes: " + createdQuizzes.size());
+        List<QuizDto> quizzes = new ArrayList<>();
+        for (Quiz quiz : createdQuizzes) {
+            System.out.println("Quiz: quiz id: " + quiz.getQuizId() + " categoryId: " + quiz.getCategory().getCategoryId());
+            if (quiz.getCategory().getCategoryId().equals(categoryId)) {
+                System.out.println("adding Quiz: quiz id: " + quiz.getQuizId() + " categoryId: " + quiz.getCategory().getCategoryId());
 
                 quizzes.add(this.quizToDto(quiz));
             }
@@ -240,20 +196,18 @@ public class UserServiceImpl implements UserService {
         return quizzes;
     }
 
-   
 
     //add the user to a particular category
     @Override
     public void addEnrolledCategory(Long userid, Long categoryid) {
-        Optional<Category> category=this.categoryRepository.findById(categoryid);
-        if(category.isPresent()){
+        Optional<Category> category = this.categoryRepository.findById(categoryid);
+        if (category.isPresent()) {
             //Load user
-            User user=this.userRepository.findById(userid).get();
+            User user = this.userRepository.findById(userid).get();
             user.getEnrolledCategories().add(category.get());
             //save the user
-            user=this.userRepository.save(user);
-        }
-        else{
+            user = this.userRepository.save(user);
+        } else {
             throw new ResourceNotFoundException("Category", "category id", Long.toString(categoryid));
         }
     }
@@ -262,18 +216,17 @@ public class UserServiceImpl implements UserService {
     //get all the categories in which the user is enrolled
     @Override
     public List<CategoryDto> getEnrolledCategories(Long userid) {
-        User user=this.userRepository.findById(userid).get();
-        Set<Category> enrolledCategories=user.getEnrolledCategories();
-        List<CategoryDto> eCategoryDtos=new ArrayList<>();
-        for(Category enCategory:enrolledCategories){
+        User user = this.userRepository.findById(userid).get();
+        Set<Category> enrolledCategories = user.getEnrolledCategories();
+        List<CategoryDto> eCategoryDtos = new ArrayList<>();
+        for (Category enCategory : enrolledCategories) {
             eCategoryDtos.add(this.categoryToDto(enCategory));
         }
         return eCategoryDtos;
     }
 
 
-
-    private QuizDto quizToDto(Quiz quiz){
+    private QuizDto quizToDto(Quiz quiz) {
         return this.modelMapper.map(quiz, QuizDto.class);
     }
 
@@ -281,5 +234,5 @@ public class UserServiceImpl implements UserService {
         CategoryDto categoryDto = this.modelMapper.map(category, CategoryDto.class);
         return categoryDto;
     }
-    
+
 }

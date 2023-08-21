@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="quiz_record")
-public class QuizHistory {
+public class QuizHistory { 
 
     
     public QuizHistory() {

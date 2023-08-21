@@ -44,7 +44,7 @@ public class Quiz {
 
   
    @OneToMany(mappedBy = "quiz",fetch = FetchType.LAZY/*Data is obtained when getter is called */,cascade = CascadeType.ALL)
-//    @JsonIgnore //use json igone so that we do not fetch questions 
+//    @JsonIgnore //use json ignore so that we do not fetch questions
    private List<Question> questions=new ArrayList<>();
 
    @ManyToOne(fetch = FetchType.EAGER)

@@ -11,14 +11,11 @@ import com.ayushsingh.assessmentportal.model.User;
 public interface UserService  {
     
     //creating user
-    public UserDto createUser(UserDto user);
-    public UserDto findByEmail(String email);
-    // creating user
-	// public User createUser(User user,List<UserRole> userRoles)throws Exception;//UserRole contain roles
-    
-    public UserDto findByUsername(String username);
 
-    // public void deleteUserByUsername(String username);
+    public UserDto findByEmail(String email);
+
+    
+
 
     public void deleteUserbyId(String id);
 

@@ -23,14 +23,5 @@ public class Role {
     @Column(name="rolename",nullable=false,unique=true)
     private String roleName;
 
-    // @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY/*So that userRoles are not fetched unless we call a function */,
-    // mappedBy = "role")
-    // private List<UserRole> userRoles=new ArrayList<>();
 
-    // @Id
-	// private long roleId;
-	// private String roleName;
-	
-	// @OneToMany(cascade = CascadeType.ALL,fetch=FetchType.LAZY,mappedBy = "role")
-	// private List<UserRole> userRoles=new ArrayList<>();
 }
